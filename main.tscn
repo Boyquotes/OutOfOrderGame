@@ -1,6 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://player.gd" type="Script" id=1]
+[ext_resource path="res://Guns/pistol.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Textures/testTexture.tres" type="Material" id=5]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.33
@@ -8,29 +10,19 @@ radius = 0.33
 [sub_resource type="CapsuleMesh" id=4]
 radius = 0.33
 
-[sub_resource type="CubeMesh" id=7]
-size = Vector3( 0.05, 0.1, 0.5 )
-
-[sub_resource type="PlaneMesh" id=2]
-size = Vector2( 100, 100 )
-
-[sub_resource type="ConcavePolygonShape" id=6]
-data = PoolVector3Array( 50, 0, 50, -50, 0, 50, 50, 0, -50, -50, 0, 50, -50, 0, -50, 50, 0, -50 )
-
-[sub_resource type="CubeMesh" id=3]
-size = Vector3( 1, 1, 1 )
-
-[sub_resource type="ConcavePolygonShape" id=5]
-data = PoolVector3Array( -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5 )
-
 [node name="Main" type="Spatial"]
 
 [node name="Player" type="KinematicBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 1.2 )
 script = ExtResource( 1 )
+_world = NodePath("..")
 _camera = NodePath("Camera")
-_raycast = NodePath("Camera/RayCast")
-_mouse_sensitivity = 0.1
+_shoot_raycast = NodePath("Camera/ShootRayCast")
+_interact_raycast = NodePath("Camera/InteractRayCast")
+_hand = NodePath("Camera/Hand")
+_move_speed = 5.0
+_jump_height = 2.0
+_gravity = 0.15
 
 [node name="CollisionShape" type="CollisionShape" parent="Player"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
@@ -42,35 +34,22 @@ mesh = SubResource( 4 )
 material/0 = null
 
 [node name="Camera" type="Camera" parent="Player"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.3 )
 
-[node name="RayCast" type="RayCast" parent="Player/Camera"]
+[node name="ShootRayCast" type="RayCast" parent="Player/Camera"]
 enabled = true
-cast_to = Vector3( 0, 0, -50 )
+cast_to = Vector3( 0, 0, -10 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Player/Camera"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, -0.125, -0.2 )
-mesh = SubResource( 7 )
-material/0 = null
+[node name="InteractRayCast" type="RayCast" parent="Player/Camera"]
+enabled = true
+cast_to = Vector3( 0, 0, -2 )
+debug_shape_custom_color = Color( 0.243137, 0.0196078, 0.0196078, 1 )
+debug_shape_thickness = 5
 
-[node name="Ground" type="MeshInstance" parent="."]
-mesh = SubResource( 2 )
-material/0 = null
+[node name="Hand" type="Spatial" parent="Player/Camera"]
+transform = Transform( 0.996195, 0, -0.0871557, 0, 1, 0, 0.0871557, 0, 0.996195, 0.15, -0.15, -0.2 )
 
-[node name="StaticBody" type="StaticBody" parent="Ground"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Ground/StaticBody"]
-shape = SubResource( 6 )
-
-[node name="ScaleCube" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
-mesh = SubResource( 3 )
-material/0 = null
-
-[node name="StaticBody" type="StaticBody" parent="ScaleCube"]
-
-[node name="CollisionShape" type="CollisionShape" parent="ScaleCube/StaticBody"]
-shape = SubResource( 5 )
+[node name="pistol" parent="Player/Camera/Hand" instance=ExtResource( 3 )]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -84,3 +63,24 @@ margin_top = -4.0
 margin_right = 4.0
 margin_bottom = 4.0
 color = Color( 0.698039, 0.815686, 0.552941, 1 )
+
+[node name="CSGCombiner" type="CSGCombiner" parent="."]
+material_override = ExtResource( 5 )
+use_collision = true
+
+[node name="CSGBox" type="CSGBox" parent="CSGCombiner"]
+transform = Transform( 1.00076, 0, 0, 0, 1.00076, 0, 0, 0, 1.00076, 0.0648499, -0.413861, -0.059818 )
+width = 10.0
+height = 1.0
+depth = 10.0
+
+[node name="CSGBox" type="CSGBox" parent="CSGCombiner/CSGBox"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0 )
+operation = 2
+width = 9.0
+height = 0.5
+depth = 9.0
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5.10609, 0 )
+visible = false
