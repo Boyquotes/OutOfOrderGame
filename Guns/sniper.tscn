@@ -1,26 +1,24 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Guns/pistol.gd" type="Script" id=1]
+[ext_resource path="res://Guns/sniper.gd" type="Script" id=1]
 
 [sub_resource type="BoxShape" id=1]
 
 [sub_resource type="CubeMesh" id=2]
-size = Vector3( 0.2, 0.1, 0.3 )
+size = Vector3( 0.2, 0.1, 1.2 )
 
 [sub_resource type="SpatialMaterial" id=3]
-albedo_color = Color( 0.0627451, 0.635294, 0.0745098, 1 )
+albedo_color = Color( 0.0627451, 0.176471, 0.635294, 1 )
 
-[node name="pistol" type="RigidBody"]
+[node name="Sniper" type="RigidBody"]
 script = ExtResource( 1 )
-_delay = 2.0
-
-[node name="Timer" type="Timer" parent="."]
+_fire_rate = 0.75
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 0.1, 0, 0, 0, 0.05, 0, 0, 0, 0.15, 0, 0, 0 )
+transform = Transform( 0.1, 0, 0, 0, 0.05, 0, 0, 0, 0.6, 0, 0, 0 )
 shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 mesh = SubResource( 2 )
-skeleton = NodePath("../..")
+skeleton = NodePath("")
 material/0 = SubResource( 3 )

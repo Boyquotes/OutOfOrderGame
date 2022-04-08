@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://player.gd" type="Script" id=1]
+[ext_resource path="res://Guns/rifle.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Guns/pistol.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Guns/sniper.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Textures/testTexture.tres" type="Material" id=5]
 
 [sub_resource type="CapsuleShape" id=1]
@@ -49,8 +51,6 @@ debug_shape_thickness = 5
 [node name="Hand" type="Spatial" parent="Player/Camera"]
 transform = Transform( 0.996195, 0, -0.0871557, 0, 1, 0, 0.0871557, 0, 0.996195, 0.15, -0.15, -0.2 )
 
-[node name="pistol" parent="Player/Camera/Hand" instance=ExtResource( 3 )]
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Crosshair" type="ColorRect" parent="CanvasLayer"]
@@ -84,3 +84,17 @@ depth = 9.0
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5.10609, 0 )
 visible = false
+
+[node name="Pistol" parent="." instance=ExtResource( 3 )]
+
+[node name="Pistol2" parent="." instance=ExtResource( 3 )]
+
+[node name="Rifle" parent="." instance=ExtResource( 2 )]
+
+[node name="Rifle2" parent="." instance=ExtResource( 2 )]
+
+[node name="Rifle3" parent="." instance=ExtResource( 2 )]
+
+[node name="Sniper" parent="." instance=ExtResource( 4 )]
+
+[node name="Sniper2" parent="." instance=ExtResource( 4 )]
