@@ -4,10 +4,12 @@ extends RigidBody
 #Referenced code can be found https://github.com/Miziziziz/Godot3DGunSystem.
 #Timers wern't working due to the many different instances and this get_time solution worked perfectly.
 
-export var _throw_strength: float = 15.0
+export var _damage: float = 10.0
 export var _fire_rate: float = 0.2
 export var _is_auto: bool = false
 export var _decay_time: float = 3
+export var _throw_strength: float = 15.0
+export var _can_be_picked_up: bool = true
 
 var _bullet_hole: Object = preload("res://bulletHole.tscn")
 var _last_fire_time: float = 0.0
@@ -26,7 +28,10 @@ func _process(delta):
 		#Resets _dropped so the force is only applied once
 		_dropped = false
 		
-		#Sets _broken to true so the weapon can't be picked up 
+		#Sets _can_be_pickedup to false so the weapon can't be picked up 
+		_can_be_picked_up = false
+		
+		#Sets _broken to true so the weapon can start its despawn timer
 		_broken = true
 		
 		#Sets _time_broken to current time
@@ -66,10 +71,13 @@ func shoot_auto(target, raycast):
 
 #Shoots the gun if enough time has elapsed since the last shot
 func shoot(target, raycast) -> void:
+	
 	#Compares if the _last_fire_time and _fire_rate if passed time is more than _fire_rate then shoot
 	if get_time() - _last_fire_time < _fire_rate:
 		return
 	_last_fire_time = get_time()
+	if target.is_in_group("Enemy"):
+		target.health -= _damage
 	add_bullet_hole(target,raycast)
 
 

@@ -2,29 +2,26 @@
 
 [ext_resource path="res://player.gd" type="Script" id=1]
 [ext_resource path="res://Guns/rifle.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Guns/pistol.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Guns/sniper.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Enemies/pistolEnemy.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Enemies/rifleEnemy.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Textures/testTexture.tres" type="Material" id=5]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.33
 
-[sub_resource type="CapsuleMesh" id=4]
+[sub_resource type="CapsuleMesh" id=2]
 radius = 0.33
 
-[node name="Main" type="Spatial"]
+[node name="World" type="Spatial"]
 
 [node name="Player" type="KinematicBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 1.2 )
 script = ExtResource( 1 )
-_world = NodePath("..")
-_camera = NodePath("Camera")
-_shoot_raycast = NodePath("Camera/ShootRayCast")
-_interact_raycast = NodePath("Camera/InteractRayCast")
-_hand = NodePath("Camera/Hand")
-_move_speed = 5.0
-_jump_height = 2.0
-_gravity = 0.15
+_world = NodePath("../../World")
+_camera = NodePath("../../World/Player/Camera")
+_shoot_raycast = NodePath("../../World/Player/Camera/ShootRayCast")
+_interact_raycast = NodePath("../../World/Player/Camera/InteractRayCast")
+_hand = NodePath("../../World/Player/Camera/Hand")
 
 [node name="CollisionShape" type="CollisionShape" parent="Player"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
@@ -32,24 +29,26 @@ shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Player"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
-mesh = SubResource( 4 )
+mesh = SubResource( 2 )
 material/0 = null
 
 [node name="Camera" type="Camera" parent="Player"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.3 )
 
 [node name="ShootRayCast" type="RayCast" parent="Player/Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00485754, 0.00535989, 0.0153327 )
 enabled = true
-cast_to = Vector3( 0, 0, -10 )
+cast_to = Vector3( 0, 0, -100 )
 
 [node name="InteractRayCast" type="RayCast" parent="Player/Camera"]
 enabled = true
 cast_to = Vector3( 0, 0, -2 )
-debug_shape_custom_color = Color( 0.243137, 0.0196078, 0.0196078, 1 )
-debug_shape_thickness = 5
 
 [node name="Hand" type="Spatial" parent="Player/Camera"]
 transform = Transform( 0.996195, 0, -0.0871557, 0, 1, 0, 0.0871557, 0, 0.996195, 0.15, -0.15, -0.2 )
+
+[node name="Rifle" parent="Player/Camera/Hand" instance=ExtResource( 2 )]
+transform = Transform( 0.996194, 0, 0.0871556, 0, 1, 0, -0.0871556, 0, 0.996194, 0, 0, 0 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -63,38 +62,38 @@ margin_top = -4.0
 margin_right = 4.0
 margin_bottom = 4.0
 color = Color( 0.698039, 0.815686, 0.552941, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CSGCombiner" type="CSGCombiner" parent="."]
 material_override = ExtResource( 5 )
 use_collision = true
 
 [node name="CSGBox" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( 1.00076, 0, 0, 0, 1.00076, 0, 0, 0, 1.00076, 0.0648499, -0.413861, -0.059818 )
+transform = Transform( 1.00076, 0, 0, 0, 1.00076, 0, 0, 0, 1.00076, 0.00377675, -1, -0.00023675 )
 width = 10.0
-height = 1.0
+height = 1.5
 depth = 10.0
 
 [node name="CSGBox" type="CSGBox" parent="CSGCombiner/CSGBox"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0 )
+transform = Transform( 0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0.55, 0 )
 operation = 2
 width = 9.0
 height = 0.5
 depth = 9.0
 
+[node name="CSGBox2" type="CSGBox" parent="CSGCombiner"]
+transform = Transform( 0.23985, 0, 0, 0, 1.81275, 0, 0, 0, 2.38607, 4, 2, 0 )
+height = 2.74798
+depth = 4.26911
+
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5.10609, 0 )
 visible = false
 
-[node name="Pistol" parent="." instance=ExtResource( 3 )]
+[node name="enemy" parent="." instance=ExtResource( 3 )]
+transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 0, 0, -3.352 )
 
-[node name="Pistol2" parent="." instance=ExtResource( 3 )]
-
-[node name="Rifle" parent="." instance=ExtResource( 2 )]
-
-[node name="Rifle2" parent="." instance=ExtResource( 2 )]
-
-[node name="Rifle3" parent="." instance=ExtResource( 2 )]
-
-[node name="Sniper" parent="." instance=ExtResource( 4 )]
-
-[node name="Sniper2" parent="." instance=ExtResource( 4 )]
+[node name="enemy2" parent="." instance=ExtResource( 4 )]
+transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 1.44697, 0, -3.34016 )

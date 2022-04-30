@@ -6,17 +6,21 @@ export var _shoot_raycast: NodePath
 export var _interact_raycast: NodePath
 export var _hand: NodePath
 export var _mouse_sensitivity: float = 0.08
-export var _move_speed: float = 3.0
-export var _jump_height: float = 5.0
-export var _gravity: float = 0.25
+export var _move_speed: float = 6.0
+export var _jump_height: float = 8.0
+export var _gravity: float = 0.1
+export var _acceleration = 50
 
 var _floor_direction: Vector3 = Vector3(0,1,0)
-var _jump_vector: Vector3
+var _vertical_vector: Vector3
+var _velocity: Vector3
+var _wall_normal: Vector3
+var _last_on_wall: float
 
 var _weapon_to_throw: Object
 var _weapon_to_pickup: Object
 
-
+var _can_wall_jump: bool = true
 
 var _pistol: Resource = preload("res://Guns/pistol.tscn")
 var _rifle: Resource = preload("res://Guns/rifle.tscn")
@@ -32,51 +36,49 @@ func _ready():
 #Handles input based processes every frame
 func _input(event) -> void:
 	aim(event)
-	atacking()
 
 
 #Handles all non-physics processes every frame
 func _process(delta):
 	pickup_and_drop()
+	if Input.is_action_pressed("shoot"):
+		atacking()
 
 #Handles player physics every frame
 func _physics_process(delta):
-	movement()
+	movement(delta)
 
 
 #Handles movement by modifying two vector3s, one for lateral movement and one for longitudinal movement
 #these two vectors3s are then added together and normalised to create the movement vector
 #the move_and_slide function is then called with the movement vector multiplied by the movespeed 
 #Handles jumping by checking if the player is on the floor, if so, the player can jump, if not, gravity is added
-func movement():
-	var movement_vector: Vector3
-	var forward_movement: Vector3
-	var sideways_movement: Vector3
+func movement(delta):
+	var movement_direction: Vector3
 	
 	
 	if Input.is_action_pressed("move_forward"):
-		forward_movement = -transform.basis.z
+		movement_direction += -transform.basis.z
 	elif Input.is_action_pressed("move_back"):
-		forward_movement = transform.basis.z
+		movement_direction += transform.basis.z
 	
 	if Input.is_action_pressed("move_left"):
-		sideways_movement = -transform.basis.x
+		movement_direction += -transform.basis.x
 	elif Input.is_action_pressed("move_right"):
-		sideways_movement = transform.basis.x
+		movement_direction += transform.basis.x
 	
 	#Checks if the player can jump (if they're on the floor)
 	if is_on_floor() && Input.is_action_pressed("jump"):
-		_jump_vector = transform.basis.y*_jump_height
-	elif !is_on_floor():
-		_jump_vector.y = clamp(_jump_vector.y - _gravity,-20,100)
-	else:
-		_jump_vector.y = 0
+		_vertical_vector.y = _jump_height
+		_can_wall_jump = true
+	elif not is_on_floor():
+		_vertical_vector.y -= _gravity
 	
 	#Sets movement vector
-	movement_vector = forward_movement + sideways_movement  
-	movement_vector = movement_vector.normalized()
-	movement_vector += _jump_vector
-	move_and_slide(movement_vector * _move_speed, _floor_direction)
+	movement_direction = movement_direction.normalized()
+	_velocity = _velocity.linear_interpolate(movement_direction*_move_speed, _acceleration * delta)
+	_velocity = move_and_slide(_velocity, _floor_direction)
+	move_and_slide(_vertical_vector, _floor_direction)
 
 
 #Takes an event, checks if the event is mouse motion. 
@@ -112,26 +114,25 @@ func atacking() -> void:
 			target = shoot_raycast.get_collider() 
 			
 			#If there is a taget hit, the shot function is called handleing the damage and bullet holes
-			if target != null:
+			if target != null && not target.is_in_group("Weapon"):
 				_weapon_to_throw.shoot(target,shoot_raycast)
 		
 		#If the player doesn't have a weapon, the short range punch_raycast is used
 		elif hand.get_child_count() != 0:
 			target = punch_raycast.get_collider()
-			if target != null:
+			if target != null && not target.is_in_group("Weapon"):
 				hand.get_child(0).shoot(target, punch_raycast)
 	
 	#Checks if the player is holding down the shoot button (trys to use auto)
 	elif Input.is_action_pressed("shoot"):
 		var target: Object
-		
 		#If the player has a weapon, the long range shoot_raycast is used
 		if hand.get_child_count() != 0 && hand.get_child(0).get_name() != "EmptyHand":
 			#The game finds if the raycast in interacting with any objects
 			target = shoot_raycast.get_collider() 
 			
 			#If there is a taget hit, the shot_auto function is called handleing the damage and bullet holes
-			if target != null:
+			if target != null && not target.is_in_group("Weapon") :
 				_weapon_to_throw.shoot_auto(target,shoot_raycast)
 		
 		#If the player doesn't have a weapon, the short range punch_raycast is used
@@ -139,6 +140,7 @@ func atacking() -> void:
 			target = punch_raycast.get_collider()
 			if target != null:
 				hand.get_child(0).shoot_auto(target,shoot_raycast)
+
 
 
 
@@ -156,11 +158,11 @@ func pickup_and_drop() -> void:
 	
 	#If the player is looking at a weapon in range to pick up, the game checks what weapon it is and whether it's broken
 	#An instance of that weapon is then stored in _weapon_to_pickup ready for the player to pick it up 
-	if reach.is_colliding() && "Pistol" in reach.get_collider().get_name()  && reach.get_collider()._broken != true:
+	if reach.is_colliding() && "Pistol" in reach.get_collider().get_name()  && reach.get_collider()._can_be_picked_up != false:
 		_weapon_to_pickup= _pistol.instance()
-	elif reach.is_colliding() && "Rifle" in reach.get_collider().get_name()  && reach.get_collider()._broken != true:
+	elif reach.is_colliding() && "Rifle" in reach.get_collider().get_name()  && reach.get_collider()._can_be_picked_up != false:
 		_weapon_to_pickup = _rifle.instance()
-	elif reach.is_colliding() && "Sniper" in reach.get_collider().get_name()  && reach.get_collider()._broken != true:
+	elif reach.is_colliding() && "Sniper" in reach.get_collider().get_name()  && reach.get_collider()._can_be_picked_up != false:
 		_weapon_to_pickup = _sniper.instance()
 	else:
 		_weapon_to_pickup = null
@@ -169,13 +171,13 @@ func pickup_and_drop() -> void:
 	if hand.get_child_count() != 0 && get_child(0) != null:
 		
 		#The game then determines what the name of the held weapon is (set to null if the child is empty hand)
-		if hand.get_child(0).get_name() == "Pistol" :
+		if "Pistol" in hand.get_child(0).get_name():
 			if _weapon_to_throw == null || _weapon_to_throw.get_name() != "Pistol":
 				_weapon_to_throw = _pistol.instance()
-		elif hand.get_child(0).get_name() == "Rifle":
+		elif "Rifle" in hand.get_child(0).get_name():
 			if _weapon_to_throw == null || _weapon_to_throw.get_name() != "Rifle":
 				_weapon_to_throw = _rifle.instance()
-		elif hand.get_child(0).get_name() == "Sniper":
+		elif "Sniper" in hand.get_child(0).get_name():
 			if _weapon_to_throw == null || _weapon_to_throw.get_name() != "Sniper":
 				_weapon_to_throw = _sniper.instance()
 	else:
@@ -210,9 +212,8 @@ func pickup_and_drop() -> void:
 				_weapon_to_throw.global_transform = hand.global_transform
 				_weapon_to_throw._dropped = true
 				_weapon_to_throw = null
-			else:
-				#If the player has doesn't have a weapon e.g only child of hand is emptyHand, this is deleted
-				hand.get_child(0).queue_free()
+			#If the player has doesn't have a weapon e.g only child of hand is emptyHand, this is deleted
+			hand.get_child(0).queue_free()
 		#Deletes the weapon on the ground
 		reach.get_collider().queue_free()
 		
@@ -222,7 +223,9 @@ func pickup_and_drop() -> void:
 		#Sets the rotation for the gun to be correct
 		_weapon_to_pickup.rotation = hand.rotation
 
-
+#Gets current time, painless way of making timers
+func get_time():
+	return OS.get_ticks_msec() / 1000.0
 
 
 
