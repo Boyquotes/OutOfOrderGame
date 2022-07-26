@@ -1,9 +1,9 @@
 extends KinematicBody
 
 enum {
-	ATTACK,
 	IDLE,
-	ALERT,
+	ACTIVE,
+	SURRENDER,
 	DEAD
 }
 
@@ -82,7 +82,7 @@ func _on_Area_body_entered(body):
 		return
 	
 	if body.is_in_group("Player"):
-		state = ALERT
+		state = ACTIVE
 		target = body
 
 
@@ -104,16 +104,11 @@ func state_handler():
 		IDLE:
 			
 			pass
-		ALERT:
-			eyes.look_at(target.global_transform.origin, Vector3.UP)
-			rotate_y(deg2rad(eyes.rotation.y * stats.turn_speed))
-			if get_time() - last_shot > fire_rate:
-				shoot()
-			var _mov = move_and_slide(-transform.basis.z*stats.move_speed,Vector3.UP)
+		ACTIVE:
+			active()
+		
 		DEAD:
-			drop_weapon()
-			self.queue_free()
-			GlobalVariables.remaining_enemies -= 1
+			die()
 
 func shoot():
 	shoot_target = null
@@ -128,6 +123,17 @@ func shoot():
 	
 	last_shot = get_time()
 
+func active():
+	eyes.look_at(target.global_transform.origin, Vector3.UP)
+	rotate_y(deg2rad(eyes.rotation.y * stats.turn_speed))
+	if get_time() - last_shot > fire_rate:
+		shoot()
+	var _mov = move_and_slide(-transform.basis.z*stats.move_speed,Vector3.UP)
+
+func die():
+	drop_weapon()
+	self.queue_free()
+	GlobalVariables.remaining_enemies -= 1
 
 #Gets current time, painless way of making timers
 func get_time():

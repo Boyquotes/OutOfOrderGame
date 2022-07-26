@@ -206,7 +206,7 @@ transform = Transform( 0.996195, 0, -0.0871557, 0, 1, 0, 0.0871557, 0, 0.996195,
 
 [node name="SpawnHandler" parent="." instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
-spawn_locations_list = [ NodePath("SpawnLocation"), NodePath("SpawnLocation2"), NodePath("SpawnLocation3"), NodePath("SpawnLocation4"), NodePath("SpawnLocation5") ]
+spawn_locations_list = [ NodePath("SpawnLocation"), NodePath("SpawnLocation2"), NodePath("SpawnLocation3") ]
 
 [node name="SpawnLocation" parent="SpawnHandler" instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0 )
@@ -216,9 +216,3 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 0, 14 )
 
 [node name="SpawnLocation3" parent="SpawnHandler" instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -16 )
-
-[node name="SpawnLocation4" parent="SpawnHandler" instance=ExtResource( 4 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 20 )
-
-[node name="SpawnLocation5" parent="SpawnHandler" instance=ExtResource( 4 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -18 )
