@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Guns/Gun Scripts/Gun Stats/weaponStats.gd" type="Script" id=1]
+[ext_resource path="res://punchHole.tscn" type="PackedScene" id=2]
+
+[resource]
+script = ExtResource( 1 )
+damage = 100.0
+fire_rate = 0.2
+ammo = 99999999999
+is_auto = false
+throw_strength = 15.0
+throw_damage = 10.0
+can_jam = false
+inv_chance_to_jam = 40
+decay_time = 3.0
+bullet_hole = ExtResource( 2 )

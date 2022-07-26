@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/Pistol_model.glb-184015434169ef32839e1ee064658033.scn"
+path="res://.import/Sniper_model.glb-829371a079056a1c41850e8290608302.scn"
 
 [deps]
 
-source_file="res://Guns/Gun_Models/Pistol_model.glb"
-dest_files=[ "res://.import/Pistol_model.glb-184015434169ef32839e1ee064658033.scn" ]
+source_file="res://Guns/Gun Models/Sniper_model.glb"
+dest_files=[ "res://.import/Sniper_model.glb-829371a079056a1c41850e8290608302.scn" ]
 
 [params]
 

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Enemies/Enemy Scripts/Enemy Stat Sheets/enemyStats.gd" type="Script" id=1]
+[ext_resource path="res://Guns/Gun Scenes/pistol.tscn" type="PackedScene" id=2]
+
+[resource]
+script = ExtResource( 1 )
+health = 100
+weapon = ExtResource( 2 )
+turn_speed = 4.0
+idle_turn_delay = 3.0
+move_speed = 2.0

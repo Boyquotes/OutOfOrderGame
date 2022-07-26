@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/Rifle model.glb-e74824184932e5487e3d69a36489daa4.scn"
+path="res://.import/Rifle model.glb-b704d1499ba9927dfa13ecbfc9139691.scn"
 
 [deps]
 
-source_file="res://Guns/Gun_Models/Rifle model.glb"
-dest_files=[ "res://.import/Rifle model.glb-e74824184932e5487e3d69a36489daa4.scn" ]
+source_file="res://Guns/Gun Models/Rifle model.glb"
+dest_files=[ "res://.import/Rifle model.glb-b704d1499ba9927dfa13ecbfc9139691.scn" ]
 
 [params]
 

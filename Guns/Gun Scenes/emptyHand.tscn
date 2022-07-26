@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Guns/emptyHand.gd" type="Script" id=1]
+[ext_resource path="res://Guns/Gun Scripts/hitscan.gd" type="Script" id=1]
+[ext_resource path="res://Guns/Gun Scripts/Gun Stats/emptyHandStats.tres" type="Resource" id=2]
 
 [sub_resource type="CubeMesh" id=1]
 size = Vector3( 0.1, 0.1, 0.25 )
@@ -13,8 +14,8 @@ albedo_color = Color( 0.937255, 0.0235294, 0.0235294, 1 )
 
 [node name="EmptyHand" type="RigidBody"]
 script = ExtResource( 1 )
-_damage = 100.0
-_fire_rate = 0.5
+stats = ExtResource( 2 )
+raycast_path = NodePath("RayCast")
 
 [node name="Arm" type="MeshInstance" parent="."]
 mesh = SubResource( 1 )
@@ -26,3 +27,8 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.15 )
 mesh = SubResource( 2 )
 skeleton = NodePath("../..")
 material/0 = SubResource( 3 )
+
+[node name="RayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.15, 0 )
+enabled = true
+cast_to = Vector3( 0, 0, -1.5 )

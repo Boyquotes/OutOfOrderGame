@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Guns/Gun Scripts/hitscan.gd" type="Script" id=1]
+[ext_resource path="res://Guns/Gun Models/Pistol_model.glb" type="PackedScene" id=2]
+[ext_resource path="res://Guns/Gun Scripts/Gun Stats/pistolStats.tres" type="Resource" id=3]
+
+[sub_resource type="BoxShape" id=1]
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 0.5, 0.5, 0.5 )
+
+[node name="Pistol" type="RigidBody" groups=[
+"Weapon",
+]]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0247902, -0.00452006, -0.0152917 )
+contacts_reported = 1
+contact_monitor = true
+script = ExtResource( 1 )
+stats = ExtResource( 3 )
+raycast_path = NodePath("RayCast")
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 0.075, 0, 0, 0, 0.15, 0, 0, 0, 0.2, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="Pistol_model" parent="." instance=ExtResource( 2 )]
+transform = Transform( -1.62921e-08, -0.1, 1.62921e-08, 0, -1.62921e-08, -0.1, 0.1, -1.62921e-08, 2.65431e-15, 0, 0, 0 )
+
+[node name="Area" type="Area" parent="." groups=[
+"Weapon",
+]]
+
+[node name="Pickup Area" type="CollisionShape" parent="Area"]
+shape = SubResource( 2 )
+
+[node name="RayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.15, 0 )
+enabled = true
+cast_to = Vector3( 0, 0, -100 )

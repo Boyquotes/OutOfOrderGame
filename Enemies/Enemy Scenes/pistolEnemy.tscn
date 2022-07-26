@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Enemies/Enemy Scripts/Enemy Stat Sheets/basicEnemyStats.tres" type="Resource" id=1]
+[ext_resource path="res://Guns/Gun Scenes/pistol.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Enemies/Enemy Scripts/Enemy.gd" type="Script" id=3]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 0.33
+
+[sub_resource type="CapsuleMesh" id=2]
+radius = 0.33
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_color = Color( 0.960784, 0.196078, 0.176471, 1 )
+
+[sub_resource type="CylinderShape" id=4]
+radius = 12.0
+
+[node name="enemy" type="KinematicBody" groups=[
+"Can_Be_Shot",
+"Enemy",
+]]
+script = ExtResource( 3 )
+stats = ExtResource( 1 )
+hand_path = NodePath("Hand")
+raycast_path = NodePath("RayCast")
+eyes_path = NodePath("Eyes")
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
+mesh = SubResource( 2 )
+material/0 = SubResource( 3 )
+
+[node name="Hand" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.173556, 0.351903, -0.392615 )
+
+[node name="Pistol" parent="Hand" instance=ExtResource( 2 )]
+
+[node name="RayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
+enabled = true
+cast_to = Vector3( 0, 0, -10 )
+
+[node name="Area" type="Area" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape" type="CollisionShape" parent="Area"]
+shape = SubResource( 4 )
+
+[node name="Eyes" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
+[connection signal="body_entered" from="Area" to="." method="_on_Area_body_entered"]
+[connection signal="body_exited" from="Area" to="." method="_on_Area_body_exited"]
