@@ -3,15 +3,20 @@ extends KinematicBody
 enum {
 	IDLE=-1,
 	ACTIVE=-2,
-	DEAD=-3
+	ATTACKING=-3,
+	DEAD=-4
 }
 
 export var stats: Resource
+export var detect_area_path: NodePath
+export var attack_area_path: NodePath
 
 onready var hand: Node = $Hand
 onready var raycast: Node = $RayCast
 onready var eyes: Node = $Eyes
 onready var anim_player: Node = $AnimationPlayer
+onready var detect_area: Node = get_node(detect_area_path)
+onready var attack_area: Node = get_node(attack_area_path)
 onready var world: Node = get_node("/root/").get_child(0) 
 
 var local_health: int 
@@ -34,9 +39,9 @@ func _ready():
 
 #Handles health checks and position of weapons
 func _process(_delta):
-	state_handler()
 	hold_item()
 	check_on_floor()
+	state_handler()
 
 
 #Handles updating held item position
@@ -46,49 +51,36 @@ func hold_item() -> void:
 	if hand.get_child_count() != 0:
 		hand.get_child(0).global_transform = hand.global_transform
 
-#Handles checking the enemies health
-func check_health() -> void:
-	
-	#Checks if the health drops below 0
-	if local_health <= 0:
-		state = DEAD
 
-#Handles droping the held weapon
-func drop_weapon() -> void:
-	
-	var gun = stats.weapon.instance()
-	
-	#Creates an instance of the given weapon in the scene
-	world.add_child(gun)
-	
-	#Makes the dropped weapon be able to be picked up
-	gun.can_be_picked_up = true
-	
-	#Sets position of dropped weapon to the hand
-	gun.global_transform = hand.global_transform
+#Checks if the enemy is on the floor, adds a gravity effect if not
+func check_on_floor():
+	if not is_on_floor():
+		var _mov = move_and_slide(Vector3(0,-2,0),Vector3.UP) 
 
 
-func _on_Area_body_entered(body) -> void:
-	#Does nothing is the enemy is dead
-	if state == DEAD:
-		return
-	
-	##Checks if the player enters the detection range
+func _on_DetectionArea_body_entered(body) -> void:
+	#Checks if the player enters the detection range
 	if body.is_in_group("Player"):
 		#Changes the state and sets the target
-		state = ACTIVE
+		change_state(ACTIVE)
 		target = body
 
-
-func _on_Area_body_exited(body) -> void:
-	#Does nothing is enemy is dead
-	if state == DEAD:
-		return
-	
+func _on_DetectionArea_body_exited(body) -> void:
 	#Checks if the leaving body is the player
 	if body.is_in_group("Player"):
+		print(detect_area.get_overlapping_bodies())
 		#Changes the state
-		state = IDLE
+		change_state(IDLE)
+
+func _on_AttackArea_body_entered(body):
+	if body.is_in_group("Player"):
+		change_state(ATTACKING)
+
+
+func _on_AttackArea_body_exited(body):
+	if body.is_in_group("Player"):
+		change_state(ACTIVE)
+
 
 #State handler for the enemy AI
 func state_handler() -> void:
@@ -103,30 +95,26 @@ func state_handler() -> void:
 			pass
 		ACTIVE:
 			active()
+		ATTACKING:
+			attack()
 		_:
-			additional_states()
+			handle_additional_states()
 
-func shoot() -> void:
-	shoot_target = null
-	
-	if raycast.is_colliding():
-		shoot_target = raycast.get_collider()
-	
-	#Checks if the enemy is aiming at the player, then shoots
-	if shoot_target != null && shoot_target.is_in_group("Player"):
-		shoot_target.health = clamp(shoot_target.health-stats.damage,0,999)
-	
-	#Handles the shot delay
-	last_shot = get_time()
 
-func active() -> void:
-	anim_player.play("Active")
-	#Allows the enemy to "look at", chase, and shoot the player
-	eyes.look_at(target.global_transform.origin, Vector3.UP)
-	rotate_y(deg2rad(eyes.rotation.y * stats.turn_speed))
-	if get_time() - last_shot > stats.attack_delay:
-		shoot()
-	var _mov = move_and_slide(-transform.basis.z*stats.move_speed,Vector3.UP)
+#Handles checking the enemies health
+func check_health() -> void:
+	#Checks if the health drops below 0
+	if local_health <= 0:
+		change_state(DEAD)
+
+#Starts the death animation
+func start_death():
+	anim_player.play("Death")
+
+#Calls die() when the death animation is finished
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "Death":
+		die()
 
 #Handles the death and deleation of the enemy
 func die() -> void:
@@ -134,23 +122,88 @@ func die() -> void:
 	self.queue_free()
 	GlobalVariables.remaining_enemies -= 1
 
-func start_death():
-	anim_player.play("Death")
+#Handles droping the held weapon
+func drop_weapon() -> void:
+	var gun = stats.weapon.instance()
+	
+	#Creates an instance of the given weapon in the scene
+	world.add_child(gun)
+	
+	#Makes the dropped weapon be able to be picked up
+	gun.can_be_picked_up = true
+	
+	#Sets position of dropped weapon to the hand
+	gun.global_transform = hand.global_transform
+
+
+func active() -> void:
+	anim_player.play("Active")
+	aim_at()
+	var _mov = move_and_slide(-transform.basis.z*stats.move_speed,Vector3.UP)
+
+func aim_at():
+	#Allows the enemy to "look at", chase, and shoot the player
+	eyes.look_at(target.global_transform.origin, Vector3.UP)
+	rotate_y(deg2rad(eyes.rotation.y * stats.turn_speed))
+
+func attack():
+	aim_at()
+	shoot()
+
+#Handles the shooting of the attack state
+func shoot() -> void:
+	shoot_target = null
+	
+	aim_at()
+	
+	if get_time() - last_shot < stats.attack_delay:
+		return
+	
+	#Handles the shot delay
+	last_shot = get_time()
+	
+	if raycast.is_colliding():
+		shoot_target = raycast.get_collider()
+	
+	#Checks if the enemy is aiming at the player, then shoots
+	if shoot_target != null && shoot_target.is_in_group("Player"):
+		shoot_target.health = clamp(shoot_target.health-stats.damage,0,999)
 
 #Gets current time, painless way of making timers
 func get_time() -> float:
 	return OS.get_ticks_msec() / 1000.0
 
+
 #Handles custom states of enemy types (made to be overriden)
-func additional_states() -> void:
-	pass
+func handle_additional_states() -> void:
+	return
 
-#Checks if the enemy is on the floor, adds a gravity effect if not
-func check_on_floor():
-	if not is_on_floor():
-		var _mov = move_and_slide(Vector3(0,-2,0),Vector3.UP) 
+#Handles logich of changing states
+func change_state(new_state):
+	
+	if state == DEAD:
+		return
+	
+	if new_state == IDLE:
+		state = check_if_in_range()
+		return
+	
+	state = change_additional_states(new_state)
+
+func check_if_in_range() -> int:
+	
+	for body in attack_area.get_overlapping_bodies():
+		if body.is_in_group("Player"):
+			return ATTACKING
+	
+	for body in detect_area.get_overlapping_bodies():
+		if body.is_in_group("Player"):
+			return ACTIVE
+	
+	return IDLE
+
+func change_additional_states(new_state):
+	return new_state
 
 
-func _on_AnimationPlayer_animation_finished(anim_name):
-	if anim_name == "Death":
-		die()
+
