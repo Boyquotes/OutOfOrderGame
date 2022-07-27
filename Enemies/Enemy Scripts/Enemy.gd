@@ -1,21 +1,17 @@
 extends KinematicBody
 
 enum {
-	IDLE,
-	ACTIVE,
-	SURRENDER,
-	DEAD
+	IDLE=-1,
+	ACTIVE=-2,
+	DEAD=-3
 }
 
 export var stats: Resource
 
-export var hand_path: NodePath
-export var raycast_path: NodePath
-export var eyes_path: NodePath
-
-onready var hand: Node = get_node(hand_path)
-onready var raycast: Node = get_node(raycast_path)
-onready var eyes: Node = get_node(eyes_path)
+onready var hand: Node = $Hand
+onready var raycast: Node = $RayCast
+onready var eyes: Node = $Eyes
+onready var anim_player: Node = $AnimationPlayer
 onready var world: Node = get_node("/root/").get_child(0) 
 
 var local_health: int 
@@ -23,8 +19,6 @@ var local_health: int
 var target: Node
 var shoot_target: Node
 var last_shot: float = 0.0
-var fire_rate: float
-var rotation_time: float = 0.0
 
 var state = IDLE
 
@@ -33,19 +27,17 @@ func _ready():
 	
 	local_health = stats.health
 	
-	GlobalVariables.remaining_enemies += 1
-	
 	#Makes the held gun be unable to be picked ups
 	if hand.get_child_count() != 0:
 		hand.get_child(0).can_be_picked_up = false
 		hand.get_child(0).get_child(0).disabled = true
-		fire_rate = hand.get_child(0).stats.fire_rate
 
 #Handles health checks and position of weapons
 func _process(_delta):
-	check_health()
 	state_handler()
 	hold_item()
+	check_on_floor()
+
 
 #Handles updating held item position
 func hold_item() -> void:
@@ -76,65 +68,89 @@ func drop_weapon() -> void:
 	gun.global_transform = hand.global_transform
 
 
-func _on_Area_body_entered(body):
-	
+func _on_Area_body_entered(body) -> void:
+	#Does nothing is the enemy is dead
 	if state == DEAD:
 		return
 	
+	##Checks if the player enters the detection range
 	if body.is_in_group("Player"):
+		#Changes the state and sets the target
 		state = ACTIVE
 		target = body
 
 
-func _on_Area_body_exited(body):
-	
+func _on_Area_body_exited(body) -> void:
+	#Does nothing is enemy is dead
 	if state == DEAD:
 		return
 	
+	#Checks if the leaving body is the player
 	if body.is_in_group("Player"):
-		rotation_time = 0.0
+		#Changes the state
 		state = IDLE
 
-func state_handler():
-	
-	if not is_on_floor():
-		var _mov = move_and_slide(Vector3(0,-2,0),Vector3.UP) 
-	
+#State handler for the enemy AI
+func state_handler() -> void:
+	#Checks the default states (Idle, Active, and Dead)
+	#If there is no match, additional_states() is called, this handles the unique states of enemy types 
+	check_health()
 	match state:
+		DEAD:
+			start_death()
 		IDLE:
-			
+			anim_player.play("Idle")
 			pass
 		ACTIVE:
 			active()
-		
-		DEAD:
-			die()
+		_:
+			additional_states()
 
-func shoot():
+func shoot() -> void:
 	shoot_target = null
-	
-	var damage: float = hand.get_child(0).stats.damage
 	
 	if raycast.is_colliding():
 		shoot_target = raycast.get_collider()
 	
+	#Checks if the enemy is aiming at the player, then shoots
 	if shoot_target != null && shoot_target.is_in_group("Player"):
-		shoot_target.health = clamp(shoot_target.health-damage,0,999)
+		shoot_target.health = clamp(shoot_target.health-stats.damage,0,999)
 	
+	#Handles the shot delay
 	last_shot = get_time()
 
-func active():
+func active() -> void:
+	anim_player.play("Active")
+	#Allows the enemy to "look at", chase, and shoot the player
 	eyes.look_at(target.global_transform.origin, Vector3.UP)
 	rotate_y(deg2rad(eyes.rotation.y * stats.turn_speed))
-	if get_time() - last_shot > fire_rate:
+	if get_time() - last_shot > stats.attack_delay:
 		shoot()
 	var _mov = move_and_slide(-transform.basis.z*stats.move_speed,Vector3.UP)
 
-func die():
+#Handles the death and deleation of the enemy
+func die() -> void:
 	drop_weapon()
 	self.queue_free()
 	GlobalVariables.remaining_enemies -= 1
 
+func start_death():
+	anim_player.play("Death")
+
 #Gets current time, painless way of making timers
-func get_time():
+func get_time() -> float:
 	return OS.get_ticks_msec() / 1000.0
+
+#Handles custom states of enemy types (made to be overriden)
+func additional_states() -> void:
+	pass
+
+#Checks if the enemy is on the floor, adds a gravity effect if not
+func check_on_floor():
+	if not is_on_floor():
+		var _mov = move_and_slide(Vector3(0,-2,0),Vector3.UP) 
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "Death":
+		die()
