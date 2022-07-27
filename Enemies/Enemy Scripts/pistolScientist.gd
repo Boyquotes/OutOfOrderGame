@@ -10,35 +10,47 @@ var fear_recovery = 3
 var timer = Timer.new()
 onready var cower_area = $CowerArea
 
+
 func _ready():
 	timer.connect("timeout",self,"_on_fear_timeout") 
 	add_child(timer)
 
-func additional_states():
+func _on_CowerArea_body_exited(body):
+	if state == DEAD:
+		return
+	if body.is_in_group("Player"):
+		timer.start(7)
+
+func _on_fear_timeout():
+	
+	timer.stop()
+	change_state(IDLE)
+
+func _on_CowerArea_body_entered(body):
+	if body.is_in_group("Player"):
+		if !timer.paused:
+			timer.stop()
+		change_state(COWER)
+
+
+func change_additional_states(new_state):
+	
+	if state == COWER:
+		return state
+	
+	
+	return new_state
+
+
+func handle_additional_states():
 	match state:
 		SURRENDER:
-			print (state)
+			surrender()
 		COWER:
-			
-			anim_player.play("Cower")
+			cower()
 
 func surrender():
 	pass
 
-
-func _on_CowerArea_body_exited(body):
-	if body.is_in_group("Player"):
-		timer.start(3)
-
-func _on_fear_timeout():
-	timer.stop()
-	state = IDLE
-
-func _on_CowerArea_body_entered(body):
-	if body.is_in_group("Player"):
-		state = COWER
-
-#Gets current time, painless way of making timers
-func get_time():
-	return OS.get_ticks_msec() / 1000.0
-
+func cower():
+	anim_player.play("Cower")
