@@ -1,8 +1,7 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Guns/Gun Scenes/pistol.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Enemies/Enemy Scripts/pistolScientist.gd" type="Script" id=2]
-[ext_resource path="res://Enemies/Enemy Scripts/Enemy Stat Sheets/basicEnemyStats.tres" type="Resource" id=3]
+[ext_resource path="res://Enemies/Enemy Scripts/Enemy.gd" type="Script" id=2]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.33
@@ -14,31 +13,13 @@ radius = 0.33
 albedo_color = Color( 0.960784, 0.196078, 0.176471, 1 )
 
 [sub_resource type="CylinderShape" id=4]
+radius = 17.0
 height = 12.0
 
-[sub_resource type="CylinderShape" id=8]
-radius = 7.0
-height = 14.0
-
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=5]
 resource_name = "Active"
 
-[sub_resource type="Animation" id=5]
-resource_name = "Cower"
-tracks/0/type = "value"
-tracks/0/path = NodePath("MeshInstance:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector3( 1, 1, 1 ), Vector3( 1, 1, 0.5 ) ]
-}
-
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=6]
 resource_name = "Death"
 tracks/0/type = "value"
 tracks/0/path = NodePath("MeshInstance:rotation_degrees")
@@ -53,18 +34,17 @@ tracks/0/keys = {
 "values": [ Vector3( 90, 0, 0 ), Vector3( 0, 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=7]
 resource_name = "Idle"
 
-[node name="pistolScientist" type="KinematicBody" groups=[
+[node name="defaultEnemy" type="KinematicBody" groups=[
 "Can_Be_Shot",
 "Enemy",
 ]]
 script = ExtResource( 2 )
-stats = ExtResource( 3 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
 shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
@@ -76,7 +56,7 @@ material/0 = SubResource( 3 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.173556, 0.351903, -0.392615 )
 
 [node name="Pistol" parent="Hand" instance=ExtResource( 1 )]
-raycast_path = NodePath("../../RayCast")
+raycast_path = NodePath("../../../defaultEnemy/RayCast")
 
 [node name="RayCast" type="RayCast" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
@@ -89,22 +69,13 @@ collision_layer = 2
 [node name="CollisionShape" type="CollisionShape" parent="DetectionArea"]
 shape = SubResource( 4 )
 
-[node name="CowerArea" type="Area" parent="."]
-collision_layer = 2
-
-[node name="CollisionShape" type="CollisionShape" parent="CowerArea"]
-shape = SubResource( 8 )
-
 [node name="Eyes" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Active = SubResource( 9 )
-anims/Cower = SubResource( 5 )
-anims/Death = SubResource( 7 )
-anims/Idle = SubResource( 6 )
+anims/Active = SubResource( 5 )
+anims/Death = SubResource( 6 )
+anims/Idle = SubResource( 7 )
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_Area_body_entered"]
 [connection signal="body_exited" from="DetectionArea" to="." method="_on_Area_body_exited"]
-[connection signal="body_entered" from="CowerArea" to="." method="_on_CowerArea_body_entered"]
-[connection signal="body_exited" from="CowerArea" to="." method="_on_CowerArea_body_exited"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
