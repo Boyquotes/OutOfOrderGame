@@ -58,6 +58,7 @@ func try_spawn() -> void:
 	#Reduces avalible spawns and put the spawner on cooldown
 	can_spawn = false
 	remaining_spawns -= 1
+	GlobalVariables.remaining_enemies += 1
 	
 	#Gets the enemy instance from the given list and spawns one at the given location
 	var enemy_instance = enemy_list[0].instance()
