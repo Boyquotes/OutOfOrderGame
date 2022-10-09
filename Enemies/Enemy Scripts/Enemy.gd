@@ -12,8 +12,8 @@ export var detect_area_path: NodePath
 export var attack_area_path: NodePath
 
 onready var hand: Node = $Hand
-onready var raycast: Node = $RayCast
 onready var eyes: Node = $Eyes
+onready var raycast: Node = $RayCast
 onready var anim_player: Node = $AnimationPlayer
 onready var detect_area: Node = get_node(detect_area_path)
 onready var attack_area: Node = get_node(attack_area_path)
@@ -24,6 +24,7 @@ var local_health: int
 var target: Node
 var shoot_target: Node
 var last_shot: float = 0.0
+var missed_shots: int = 0
 
 var state = IDLE
 
@@ -68,7 +69,6 @@ func _on_DetectionArea_body_entered(body) -> void:
 func _on_DetectionArea_body_exited(body) -> void:
 	#Checks if the leaving body is the player
 	if body.is_in_group("Player"):
-		print(detect_area.get_overlapping_bodies())
 		#Changes the state
 		change_state(IDLE)
 
@@ -145,6 +145,14 @@ func aim_at():
 	#Allows the enemy to "look at", chase, and shoot the player
 	eyes.look_at(target.global_transform.origin, Vector3.UP)
 	rotate_y(deg2rad(eyes.rotation.y * stats.turn_speed))
+	raycast.rotation_degrees.x = eyes.rotation_degrees.x
+
+func aim_miss():
+	#Allows the enemy to "look at", chase, and shoot the player
+	eyes.look_at(target.global_transform.origin+Vector3(randi(),randi(),randi()), Vector3.UP)
+	rotate_y(deg2rad(eyes.rotation.y * stats.turn_speed))
+	raycast.rotate_x(deg2rad(eyes.rotation.x*.5))
+	missed_shots += 1
 
 func attack():
 	aim_at()
@@ -159,6 +167,9 @@ func shoot() -> void:
 	if get_time() - last_shot < stats.attack_delay:
 		return
 	
+	if randi()%stats.miss_chance+1 == stats.miss_chance:
+		aim_miss()
+	
 	#Handles the shot delay
 	last_shot = get_time()
 	
@@ -167,7 +178,8 @@ func shoot() -> void:
 	
 	#Checks if the enemy is aiming at the player, then shoots
 	if shoot_target != null && shoot_target.is_in_group("Player"):
-		shoot_target.health = clamp(shoot_target.health-stats.damage,0,999)
+#		shoot_target.health = clamp(shoot_target.health-stats.damage,0,999)
+		shoot_target.health = shoot_target.health-stats.damage
 
 #Gets current time, painless way of making timers
 func get_time() -> float:
@@ -183,6 +195,9 @@ func change_state(new_state):
 	
 	if state == DEAD:
 		return
+	
+	if new_state == DEAD:
+		state = DEAD
 	
 	if new_state == IDLE:
 		state = check_if_in_range()

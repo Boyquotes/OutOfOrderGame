@@ -54,3 +54,4 @@ func surrender():
 
 func cower():
 	anim_player.play("Cower")
+

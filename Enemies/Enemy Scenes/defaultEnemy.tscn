@@ -12,19 +12,17 @@ radius = 0.33
 [sub_resource type="SpatialMaterial" id=3]
 albedo_color = Color( 0.960784, 0.196078, 0.176471, 1 )
 
-[sub_resource type="CylinderShape" id=8]
+[sub_resource type="CylinderShape" id=4]
 radius = 7.95189
 height = 10.5572
 
-[sub_resource type="CylinderShape" id=4]
+[sub_resource type="CylinderShape" id=5]
 radius = 17.0
 height = 12.0
 
-[sub_resource type="Animation" id=5]
-resource_name = "Active"
-
 [sub_resource type="Animation" id=6]
-resource_name = "Death"
+
+[sub_resource type="Animation" id=7]
 tracks/0/type = "value"
 tracks/0/path = NodePath("MeshInstance:rotation_degrees")
 tracks/0/interp = 1
@@ -38,8 +36,7 @@ tracks/0/keys = {
 "values": [ Vector3( 90, 0, 0 ), Vector3( 0, 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=7]
-resource_name = "Idle"
+[sub_resource type="Animation" id=8]
 
 [node name="defaultEnemy" type="KinematicBody" groups=[
 "Can_Be_Shot",
@@ -62,29 +59,28 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.173556, 0.351903, -0.392615
 [node name="Pistol" parent="Hand" instance=ExtResource( 1 )]
 raycast_path = NodePath("../../../defaultEnemy/RayCast")
 
-[node name="RayCast" type="RayCast" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
-enabled = true
-cast_to = Vector3( 0, 0, -10 )
-
 [node name="AttackArea" type="Area" parent="."]
 
 [node name="CollisionShape" type="CollisionShape" parent="AttackArea"]
-shape = SubResource( 8 )
+shape = SubResource( 4 )
 
 [node name="DetectionArea" type="Area" parent="."]
 collision_layer = 2
 
 [node name="CollisionShape" type="CollisionShape" parent="DetectionArea"]
-shape = SubResource( 4 )
+shape = SubResource( 5 )
 
 [node name="Eyes" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
 
+[node name="RayCast" type="RayCast" parent="Eyes"]
+enabled = true
+cast_to = Vector3( 0, 0, -10 )
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Active = SubResource( 5 )
-anims/Death = SubResource( 6 )
-anims/Idle = SubResource( 7 )
+anims/Active = SubResource( 6 )
+anims/Death = SubResource( 7 )
+anims/Idle = SubResource( 8 )
 [connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]
 [connection signal="body_exited" from="AttackArea" to="." method="_on_AttackArea_body_exited"]
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_DetectionArea_body_entered"]

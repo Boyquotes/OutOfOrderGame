@@ -7,8 +7,9 @@
 script = ExtResource( 1 )
 health = 100
 weapon = ExtResource( 2 )
-turn_speed = 4.0
+turn_speed = 10.0
 idle_turn_delay = 3.0
 move_speed = 2.0
 damage = 10.0
 attack_delay = 0.5
+miss_chance = 10

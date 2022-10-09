@@ -194,6 +194,13 @@ use_collision = true
 transform = Transform( 25, 0, 0, 0, 1, 0, 0, 0, 25, 0, -0.5, 0 )
 material = ExtResource( 5 )
 
+[node name="CSGBox2" type="CSGBox" parent="CSGCombiner2"]
+transform = Transform( 25, 0, 0, 0, 1, 0, 0, 0, 25, 10, 2.5, 0 )
+width = 0.5
+height = 0.5
+depth = 0.5
+material = ExtResource( 5 )
+
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5.10609, 0 )
 visible = false

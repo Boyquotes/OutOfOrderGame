@@ -17,19 +17,18 @@ albedo_color = Color( 0.960784, 0.196078, 0.176471, 1 )
 radius = 20.0
 height = 14.0
 
-[sub_resource type="CylinderShape" id=8]
+[sub_resource type="CylinderShape" id=5]
 radius = 5.0
 height = 14.0
 
-[sub_resource type="CylinderShape" id=10]
+[sub_resource type="CylinderShape" id=6]
 radius = 14.0
 height = 6.0
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=7]
 resource_name = "Active"
 
-[sub_resource type="Animation" id=5]
-resource_name = "Cower"
+[sub_resource type="Animation" id=8]
 tracks/0/type = "value"
 tracks/0/path = NodePath("MeshInstance:scale")
 tracks/0/interp = 1
@@ -43,8 +42,7 @@ tracks/0/keys = {
 "values": [ Vector3( 1, 1, 1 ), Vector3( 1, 1, 0.5 ) ]
 }
 
-[sub_resource type="Animation" id=7]
-resource_name = "Death"
+[sub_resource type="Animation" id=9]
 tracks/0/type = "value"
 tracks/0/path = NodePath("MeshInstance:rotation_degrees")
 tracks/0/interp = 1
@@ -58,8 +56,7 @@ tracks/0/keys = {
 "values": [ Vector3( 90, 0, 0 ), Vector3( 0, 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=6]
-resource_name = "Idle"
+[sub_resource type="Animation" id=10]
 
 [node name="pistolScientist" type="KinematicBody" groups=[
 "Can_Be_Shot",
@@ -85,11 +82,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.173556, 0.351903, -0.392615
 [node name="Pistol" parent="Hand" instance=ExtResource( 1 )]
 raycast_path = NodePath("../../RayCast")
 
-[node name="RayCast" type="RayCast" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
-enabled = true
-cast_to = Vector3( 0, 0, -10 )
-
 [node name="DetectionArea" type="Area" parent="."]
 collision_layer = 2
 
@@ -100,21 +92,26 @@ shape = SubResource( 4 )
 collision_layer = 2
 
 [node name="CollisionShape" type="CollisionShape" parent="CowerArea"]
-shape = SubResource( 8 )
+shape = SubResource( 5 )
 
 [node name="AttackArea" type="Area" parent="."]
 
 [node name="CollisionShape" type="CollisionShape" parent="AttackArea"]
-shape = SubResource( 10 )
+shape = SubResource( 6 )
 
 [node name="Eyes" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Active = SubResource( 9 )
-anims/Cower = SubResource( 5 )
-anims/Death = SubResource( 7 )
-anims/Idle = SubResource( 6 )
+anims/Active = SubResource( 7 )
+anims/Cower = SubResource( 8 )
+anims/Death = SubResource( 9 )
+anims/Idle = SubResource( 10 )
+
+[node name="RayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
+enabled = true
+cast_to = Vector3( 0, 0, -10 )
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_DetectionArea_body_entered"]
 [connection signal="body_exited" from="DetectionArea" to="." method="_on_DetectionArea_body_exited"]
 [connection signal="body_entered" from="CowerArea" to="." method="_on_CowerArea_body_entered"]
