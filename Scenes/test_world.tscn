@@ -1,0 +1,40 @@
+[gd_scene load_steps=9 format=3 uid="uid://hd6arivb2cgh"]
+
+[ext_resource type="Texture2D" uid="uid://dfhljbff5t74q" path="res://Textures/Tiles107_2K_Color.jpg" id="1_j7217"]
+[ext_resource type="PackedScene" uid="uid://n2srf2j7f04k" path="res://Scenes/Player/player.tscn" id="2_b5gmg"]
+[ext_resource type="PackedScene" uid="uid://bx7it0qy2ltjg" path="res://Scenes/Weapons/weapon.tscn" id="3_30ke4"]
+[ext_resource type="PackedScene" uid="uid://cqx8jhdsb2xr" path="res://Scenes/Enemies/test_enemy.tscn" id="4_18xn4"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5lkon"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_o3uvy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k5g72"]
+albedo_texture = ExtResource("1_j7217")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gxwtu"]
+material = SubResource("StandardMaterial3D_k5g72")
+size = Vector2(100, 100)
+
+[node name="World" type="Node3D"]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+physics_material_override = SubResource("PhysicsMaterial_5lkon")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("WorldBoundaryShape3D_o3uvy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("PlaneMesh_gxwtu")
+
+[node name="Player" parent="." instance=ExtResource("2_b5gmg")]
+
+[node name="Weapon" parent="." instance=ExtResource("3_30ke4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.53103)
+
+[node name="Weapon2" parent="." instance=ExtResource("3_30ke4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.93733, 0, 0)
+
+[node name="TestEnemy" parent="." instance=ExtResource("4_18xn4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0214, 0, 0)

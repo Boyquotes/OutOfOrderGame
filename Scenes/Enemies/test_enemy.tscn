@@ -1,0 +1,60 @@
+[gd_scene load_steps=12 format=3 uid="uid://cqx8jhdsb2xr"]
+
+[ext_resource type="Script" path="res://Scripts/Enemies/enemy_controller.gd" id="1_730fn"]
+[ext_resource type="PackedScene" uid="uid://bx7it0qy2ltjg" path="res://Scenes/Weapons/weapon.tscn" id="2_hrqsv"]
+[ext_resource type="Script" path="res://Scripts/Enemies/State Machine/enemy_state_controller.gd" id="2_qh36f"]
+[ext_resource type="Resource" uid="uid://yw2l3usfpldt" path="res://Resources/Enemy Stats/test_enemy.tres" id="2_qj73n"]
+[ext_resource type="Script" path="res://Scripts/Enemies/State Machine/enemy_dead_state.gd" id="3_wh3rl"]
+[ext_resource type="Script" path="res://Scripts/Enemies/State Machine/enemy_idle_state.gd" id="4_xmbve"]
+[ext_resource type="Script" path="res://Scripts/Enemies/State Machine/enemy_engaging_state.gd" id="5_qgabx"]
+[ext_resource type="Script" path="res://Scripts/Enemies/State Machine/enemy_patrolling_state.gd" id="6_gpl0q"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tjgro"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_aifvu"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4ha2l"]
+
+[node name="TestEnemy" type="CharacterBody3D" groups=["Enemy"]]
+script = ExtResource("1_730fn")
+stats = ExtResource("2_qj73n")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_tjgro")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_aifvu")
+
+[node name="AttackRay" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+target_position = Vector3(0, 0, -5)
+
+[node name="Hand" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.4, -0.7)
+metadata/_edit_group_ = true
+
+[node name="Weapon" parent="Hand" instance=ExtResource("2_hrqsv")]
+
+[node name="PlayerDetection" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerDetection"]
+shape = SubResource("BoxShape3D_4ha2l")
+
+[node name="Navigation" type="NavigationAgent3D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="StateController" type="Node" parent="."]
+script = ExtResource("2_qh36f")
+
+[node name="Idle" type="Node" parent="StateController"]
+script = ExtResource("4_xmbve")
+
+[node name="Engaging" type="Node" parent="StateController"]
+script = ExtResource("5_qgabx")
+
+[node name="Patrolling" type="Node" parent="StateController"]
+script = ExtResource("6_gpl0q")
+
+[node name="Dead" type="Node" parent="StateController"]
+script = ExtResource("3_wh3rl")

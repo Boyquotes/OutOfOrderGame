@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://bx7it0qy2ltjg"]
+
+[ext_resource type="Script" path="res://Scripts/Weapons/weapon_base.gd" id="1_s2dcv"]
+[ext_resource type="Resource" uid="uid://btr1krsbto6lb" path="res://Resources/Weapon Stats/test_weapon.tres" id="2_1d6fv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oub4d"]
+size = Vector3(0.1, 0.1, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7lkhd"]
+size = Vector3(0.1, 0.1, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pxc46"]
+
+[node name="Weapon" type="RigidBody3D" groups=["Weapon"]]
+max_contacts_reported = 2
+contact_monitor = true
+script = ExtResource("1_s2dcv")
+stats = ExtResource("2_1d6fv")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_oub4d")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_7lkhd")
+
+[node name="WeaponInteractArea" type="Area3D" parent="." groups=["Weapon"]]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WeaponInteractArea"]
+shape = SubResource("BoxShape3D_pxc46")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="AttackCooldown" type="Timer" parent="."]
+one_shot = true
+
+[node name="DecayTimer" type="Timer" parent="."]
+
+[node name="CollisionDelay" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="DecayTimer" to="." method="_on_decay_timer_timeout"]
+[connection signal="timeout" from="CollisionDelay" to="." method="_on_collision_delay_timeout"]

@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=2]
-
-[ext_resource path="res://Gameplay Objects/Spawner/SpawnHandler.gd" type="Script" id=1]
-[ext_resource path="res://Gameplay Objects/Spawner/Enemy Lists/BasicEnemyOnly.tres" type="Resource" id=2]
-
-[node name="SpawnHandler" type="Spatial"]
-script = ExtResource( 1 )
-enemy_list_resource = ExtResource( 2 )
-spawn_cooldown = 2

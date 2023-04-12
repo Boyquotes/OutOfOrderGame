@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=2 format=3 uid="uid://yw2l3usfpldt"]
+
+[ext_resource type="Script" path="res://Resources/Enemy Stats/enemy_stats.gd" id="1_7xoll"]
+
+[resource]
+script = ExtResource("1_7xoll")
+health = 100.0
+turn_speed = 4.0
+move_speed = 2.0
+miss_chance = 10

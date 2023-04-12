@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeaponStats" load_steps=2 format=3 uid="uid://btr1krsbto6lb"]
+
+[ext_resource type="Script" path="res://Resources/Weapon Stats/weapon_stats.gd" id="1_xdkge"]
+
+[resource]
+script = ExtResource("1_xdkge")
+damage = 10.0
+fire_rate = 2.0
+max_ammo = 10
+auto = true
+weight = 15.0
+thrown_damage = 10.0
+jam_chance = 0.0
