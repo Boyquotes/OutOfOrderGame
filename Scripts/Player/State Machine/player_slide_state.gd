@@ -1,16 +1,24 @@
 extends PlayerBaseState
 
 func enter():
-	if body.get_velocity().length() < body.get_max_speed():
-		body.set_velocity(body.get_transform().basis * Vector3(0, 0, -body.get_max_speed()))
+	if body.get_velocity().length() < body.get_max_ground_speed():
+		body.set_velocity(body.get_transform().basis * Vector3(0, 0, -body.get_max_ground_speed()))
 
 func process(delta):
 	if !is_slide_pressed():
 		return PlayerBaseState.State.Idle
+	check_attack()
 	return PlayerBaseState.State.None
 
 func is_slide_pressed() -> bool:
 	return Input.is_action_pressed("Player_Slide") and body.is_on_floor()
+
+#Checks if the player is attacking
+func check_attack():
+	if Input.is_action_just_pressed("Player_Attack"):
+		body.attack()
+	elif Input.is_action_pressed("Player_Attack"):
+		body.auto_attack()
 
 func physics_process(delta) -> void:
 	movement(delta)

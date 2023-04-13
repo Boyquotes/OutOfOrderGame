@@ -17,7 +17,8 @@ const FRICTION = 6
 @onready var debug_label = $CanvasLayer/Label
 
 #Movement Variables
-@export var max_speed: float = 12
+@export var max_ground_speed: float = 12
+@export var max_air_speed: float = 4
 @export var acceleration: float = 3
 @export var jump_strength: float = 5
 @export var dash_speed: float = 25
@@ -46,8 +47,11 @@ func get_interact_raycast() -> RayCast3D:
 func get_animation_player() -> AnimationPlayer:
 	return animation_player
 
-func get_max_speed() -> float:
-	return max_speed
+func get_max_ground_speed() -> float:
+	return max_ground_speed
+
+func get_max_air_speed() -> float:
+	return max_air_speed
 
 func get_acceleration() -> float:
 	return acceleration
@@ -72,8 +76,11 @@ func get_health() -> int:
 func set_shader_pix_size(value:float) -> void:
 	shader.set_shader_parameter("pixelSize", value)
 
-func set_max_speed(value:float) -> void:
-	max_speed = value
+func set_max_ground_speed(value:float) -> void:
+	max_ground_speed = value
+
+func set_max_air_speed(value:float) -> void:
+	max_air_speed = value
 
 func set_acceleration(value:float) -> void:
 	acceleration = value

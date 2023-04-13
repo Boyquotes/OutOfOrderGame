@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://dv2smeybp2j15"]
+
+[ext_resource type="Script" path="res://Scripts/Projectiles/base_projectile.gd" id="1_45goe"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_4d2dw"]
+radius = 0.125
+
+[sub_resource type="SphereMesh" id="SphereMesh_c3oor"]
+radius = 0.125
+height = 0.25
+radial_segments = 8
+rings = 8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_cn8un"]
+radius = 0.125
+
+[node name="Projectile" type="CharacterBody3D"]
+script = ExtResource("1_45goe")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_4d2dw")
+disabled = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_c3oor")
+
+[node name="DespawnTimer" type="Timer" parent="."]
+
+[node name="DetectionArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
+shape = SubResource("SphereShape3D_cn8un")
+
+[connection signal="timeout" from="DespawnTimer" to="." method="_on_despawn_timer_timeout"]
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]

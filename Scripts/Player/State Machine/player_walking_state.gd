@@ -11,8 +11,8 @@ func process(delta):
 	return PlayerBaseState.State.None
 
 func movement_input() -> Vector3:
-	var input = Input.get_vector("Player_Left", "Player_Right", "Player_Forward", "Player_Back")
-	return (input.x * body.global_transform.basis.x + input.y * body.global_transform.basis.z).normalized()
+	var input_dir = Input.get_vector("Player_Left", "Player_Right", "Player_Forward", "Player_Back")
+	return (body.get_transform().basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 
 func is_slide_pressed() -> bool:
 	return Input.is_action_pressed("Player_Slide") and body.is_on_floor()
@@ -32,11 +32,12 @@ func physics_process(delta) -> void:
 
 #Handles player movement, uses the same movement system as quake allowing for strafe jumping
 func movement(delta) -> void:
-	var vel = apply_friction(body.get_velocity(), delta)
-	var input_dir = Input.get_vector("Player_Left", "Player_Right", "Player_Forward", "Player_Back")
-	var wish_dir = (body.get_transform().basis * Vector3(input_dir.x, 0, input_dir.y)).normalized() 
+	var vel = body.get_velocity()
 	
-	vel = vel + clamp(body.get_max_speed() - vel.dot(wish_dir), 0 , body.get_acceleration()) * wish_dir
+	if body.is_on_floor():
+		vel = update_ground_velocity(vel,movement_input(),delta)
+	else:
+		vel = update_air_velocity(vel,movement_input(),delta)
 	
 	if !body.is_on_floor():
 		vel.y -= ProjectSettings.get_setting("physics/3d/default_gravity")*delta
@@ -45,6 +46,13 @@ func movement(delta) -> void:
 	
 	body.set_velocity(vel)
 	body.move_and_slide()
+
+func update_ground_velocity(vel:Vector3,wish_dir:Vector3,delta:float) -> Vector3:
+	vel = apply_friction(vel, delta)
+	return vel + clamp(body.get_max_ground_speed() - vel.dot(wish_dir), 0 , body.get_acceleration()) * wish_dir
+
+func update_air_velocity(vel:Vector3,wish_dir:Vector3,delta:float) -> Vector3:
+	return vel + clamp(body.get_max_air_speed() - vel.dot(wish_dir), 0 , body.get_acceleration()) * wish_dir
 
 #Takes a velocity and aplies a friction force
 func apply_friction(vel: Vector3, delta: float) -> Vector3:

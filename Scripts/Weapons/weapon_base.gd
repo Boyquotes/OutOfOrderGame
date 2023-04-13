@@ -4,6 +4,7 @@ class_name Weapon
 #Constants
 
 const DESPAWN_TIME: float = 3
+const PROJ_SPEED: float = 20
 
 #Node References
 
@@ -70,14 +71,17 @@ func auto_attack() -> void:
 		return
 	attack()
 
-#Shoots the gun if enough time has elapsed since the last shot
+#Handles attacking with the weapon
 func attack() -> void:
 	if !can_attack():
 		return
 	set_ammo(get_ammo()-1)
 	attack_timer.start(1.0/stats.get_fire_rate())
 	roll_jam()
-	print("FIRE! {ammo} attacks left. Jammed: {jammed}".format({"ammo":get_ammo(), "jammed":is_jammed()}))
+	var proj = stats.get_projectile().instantiate()
+	proj.set_position(get_global_position())
+	proj.set_velocity(get_global_transform().basis * Vector3(0,0,-1)* PROJ_SPEED)
+	find_parent("World").add_child(proj)
 
 #Returns if the weapon can fire
 func can_attack() -> bool:
@@ -85,7 +89,7 @@ func can_attack() -> bool:
 
 #Checks if the gun jams
 func roll_jam() -> void:
-	set_jammed(randi()%100 <= stats.get_jam_chance())
+	set_jammed(randi()%100 < stats.get_jam_chance())
 
 #Handles thowing held weapons
 func throw(throw_force:Vector3) -> void:

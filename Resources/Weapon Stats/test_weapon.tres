@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponStats" load_steps=2 format=3 uid="uid://btr1krsbto6lb"]
+[gd_resource type="Resource" script_class="WeaponStats" load_steps=3 format=3 uid="uid://btr1krsbto6lb"]
 
+[ext_resource type="PackedScene" uid="uid://dv2smeybp2j15" path="res://Scenes/Projectiles/test_projectile.tscn" id="1_sba2x"]
 [ext_resource type="Script" path="res://Resources/Weapon Stats/weapon_stats.gd" id="1_xdkge"]
 
 [resource]
@@ -11,3 +12,4 @@ auto = true
 weight = 15.0
 thrown_damage = 10.0
 jam_chance = 0.0
+projectile = ExtResource("1_sba2x")

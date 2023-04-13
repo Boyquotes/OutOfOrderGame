@@ -3,7 +3,7 @@ extends PlayerBaseState
 @onready var dash_timer = $DashTimer
 
 func enter():
-	dash_timer.start(.25)
+	dash_timer.start(.1)
 	dash()
 
 func dash():
@@ -21,7 +21,15 @@ func movement_input() -> Vector3:
 func process(delta) -> PlayerBaseState.State:
 	if !dash_timer.get_time_left():
 		return PlayerBaseState.State.Idle
+	check_attack()
 	return PlayerBaseState.State.None
+
+#Checks if the player is attacking
+func check_attack():
+	if Input.is_action_just_pressed("Player_Attack"):
+		body.attack()
+	elif Input.is_action_pressed("Player_Attack"):
+		body.auto_attack()
 
 func physics_process(delta) -> void:
 	body.move_and_slide()
