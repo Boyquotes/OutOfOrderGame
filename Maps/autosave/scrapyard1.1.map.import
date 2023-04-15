@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://btveelkl6dcm4"
+path="res://.godot/imported/scrapyard1.1.map-c875eb383e41c07f65aa76d52bbd0a69.tres"
+
+[deps]
+
+source_file="res://Maps/autosave/scrapyard1.1.map"
+dest_files=["res://.godot/imported/scrapyard1.1.map-c875eb383e41c07f65aa76d52bbd0a69.tres"]
+
+[params]
+

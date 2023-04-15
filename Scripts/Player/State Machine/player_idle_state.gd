@@ -5,13 +5,16 @@ extends PlayerBaseState
 
 #Switches to states from idle
 func process(delta) -> PlayerBaseState.State:
-	if is_direction_pressed():
-		return PlayerBaseState.State.Walking
+	if is_dash_pressed():
+		return PlayerBaseState.State.Dashing
 	elif is_slide_pressed():
 		return PlayerBaseState.State.Sliding
-	elif is_dash_pressed():
-		return PlayerBaseState.State.Dashing
+	elif is_direction_pressed():
+		return PlayerBaseState.State.Walking
+
 	check_attack()
+	check_pull()
+	recover_energy(delta)
 	return PlayerBaseState.State.None
 
 #Checks if direction keys are pressed
@@ -23,7 +26,7 @@ func is_slide_pressed() -> bool:
 	return Input.is_action_pressed("Player_Slide") and body.is_on_floor()
 
 func is_dash_pressed() -> bool:
-	return Input.is_action_pressed("Player_Dash")
+	return Input.is_action_just_pressed("Player_Dash") and body.get_energy()>=body.get_dash_cost()
 
 #Checks if the player is attacking
 func check_attack():
@@ -31,6 +34,13 @@ func check_attack():
 		body.attack()
 	elif Input.is_action_pressed("Player_Attack"):
 		body.auto_attack()
+
+func check_pull():
+	if Input.is_action_just_pressed("Player_Pull"):
+		body.pull_weapons()
+
+func recover_energy(delta):
+	body.set_energy(clamp(body.get_energy()+delta,0,body.get_max_energy()))
 
 func input(event) -> void:
 	move_camera(event as InputEventMouseMotion)

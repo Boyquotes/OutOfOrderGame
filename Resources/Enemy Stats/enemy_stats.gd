@@ -15,3 +15,6 @@ func get_health() -> float:
 
 func get_turn_speed() -> float:
 	return turn_speed
+
+func get_move_speed() -> float:
+	return move_speed

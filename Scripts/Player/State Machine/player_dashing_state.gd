@@ -3,7 +3,8 @@ extends PlayerBaseState
 @onready var dash_timer = $DashTimer
 
 func enter():
-	dash_timer.start(.1)
+	dash_timer.start(.25)
+	body.set_energy(body.get_energy()-body.get_dash_cost())
 	dash()
 
 func dash():

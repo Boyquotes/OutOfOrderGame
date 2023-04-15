@@ -8,6 +8,7 @@ func process(delta):
 	if !is_slide_pressed():
 		return PlayerBaseState.State.Idle
 	check_attack()
+	check_pull()
 	return PlayerBaseState.State.None
 
 func is_slide_pressed() -> bool:
@@ -20,11 +21,18 @@ func check_attack():
 	elif Input.is_action_pressed("Player_Attack"):
 		body.auto_attack()
 
+func check_pull():
+	if Input.is_action_just_pressed("Player_Pull"):
+		body.pull_weapons()
+
 func physics_process(delta) -> void:
 	movement(delta)
 
 #Handles player movement, moving the player in a straight line
 func movement(delta) -> void:
+	
+	if body.is_on_floor() and Input.is_action_pressed("Player_Jump"):
+		body.set_velocity(body.get_velocity() + Vector3(0,body.get_jump_strength(),0))
 	body.move_and_slide()
 
 func input(event) -> void:

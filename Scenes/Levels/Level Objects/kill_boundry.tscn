@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://dvtxkg8ocs5uy"]
+
+[ext_resource type="Script" path="res://Scripts/Level Objects/kill_boundry.gd" id="1_7o0sc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uauyi"]
+size = Vector3(14, 1, 35)
+
+[node name="KillBoundry" type="Area3D"]
+script = ExtResource("1_7o0sc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_uauyi")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

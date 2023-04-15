@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="QodotFGDPointClass" load_steps=4 format=3 uid="uid://dxrs2fccn5sdk"]
+
+[ext_resource type="PackedScene" uid="uid://cqx8jhdsb2xr" path="res://Scenes/Enemies/test_enemy.tscn" id="1_ba7r5"]
+[ext_resource type="Script" path="res://addons/qodot/src/resources/game-definitions/fgd/qodot_fgd_point_class.gd" id="1_lg2jd"]
+[ext_resource type="Script" path="res://Scripts/Enemies/enemy_controller.gd" id="3_03ucq"]
+
+[resource]
+script = ExtResource("1_lg2jd")
+scene = "----------------------------------------------------------------"
+scene_file = ExtResource("1_ba7r5")
+scripting = "----------------------------------------------------------------"
+script_class = ExtResource("3_03ucq")
+class_options = "----------------------------------------------------------------"
+classname = "enemy_testEnemy"
+description = "Test enemy"
+qodot_internal = false
+base_classes = Array[Resource]([])
+class_properties = {}
+class_property_descriptions = {}
+meta_properties = {
+"color": Color(0.8, 0.8, 0.8, 1),
+"size": AABB(-8, -8, -8, 8, 8, 8)
+}
+node_options = "----------------------------------------------------------------"
+node_class = ""
+transient_node = false

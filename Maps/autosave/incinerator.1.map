@@ -1,0 +1,16 @@
+// Game: Qodot
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"_tb_textures" "textures;textures/Scrap Yard"
+// brush 0
+{
+( -96 112 -16 ) ( -96 112 0 ) ( -96 -112 -16 ) TestTexture 0 0 0 1 1
+( -96 -112 -16 ) ( -96 -112 0 ) ( 96 -112 -16 ) TestTexture 16 0 0 1 1
+( -96 112 -16 ) ( -96 -112 -16 ) ( 96 112 -16 ) TestTexture 16 0 0 1 1
+( -96 -112 0 ) ( -96 112 0 ) ( 96 -112 0 ) TestTexture 16 0 0 1 1
+( 96 112 -16 ) ( 96 112 0 ) ( -96 112 -16 ) TestTexture 16 0 0 1 1
+( 96 -112 -16 ) ( 96 -112 0 ) ( 96 112 -16 ) TestTexture 0 0 0 1 1
+}
+}

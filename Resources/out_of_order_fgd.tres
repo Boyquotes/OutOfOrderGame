@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="QodotFGDFile" load_steps=23 format=3 uid="uid://y4p0vhippemo"]
+
+[ext_resource type="Resource" uid="uid://dxp37dladbquv" path="res://addons/qodot/game_definitions/fgd/solid_classes/worldspawn_solid_class.tres" id="1_4j24l"]
+[ext_resource type="Resource" path="res://addons/qodot/game_definitions/fgd/base_classes/target_base_class.tres" id="2_6gvto"]
+[ext_resource type="Resource" uid="uid://ccdjpf5j25aua" path="res://addons/qodot/game_definitions/fgd/base_classes/targetname_base_class.tres" id="3_n1yr3"]
+[ext_resource type="Resource" uid="uid://c5o31v30rw7v5" path="res://addons/qodot/game_definitions/fgd/base_classes/light_base_class.tres" id="4_huqoi"]
+[ext_resource type="Resource" path="res://addons/qodot/game_definitions/fgd/point_classes/signal_point_class.tres" id="5_ws8sn"]
+[ext_resource type="Resource" uid="uid://ccwosedfa8v8d" path="res://addons/qodot/game_definitions/fgd/point_classes/light_point_class.tres" id="6_xnsi3"]
+[ext_resource type="Resource" path="res://addons/qodot/game_definitions/fgd/point_classes/receiver_point_class.tres" id="7_a8bna"]
+[ext_resource type="Resource" uid="uid://cubvqwi3p77sq" path="res://addons/qodot/game_definitions/fgd/point_classes/physics_ball_point_class.tres" id="8_7ewto"]
+[ext_resource type="Resource" path="res://addons/qodot/game_definitions/fgd/solid_classes/func_group_solid_class.tres" id="9_c44n6"]
+[ext_resource type="Resource" path="res://addons/qodot/game_definitions/fgd/solid_classes/group_solid_class.tres" id="10_ipckd"]
+[ext_resource type="Resource" uid="uid://b8aisardk4k4u" path="res://addons/qodot/game_definitions/fgd/solid_classes/detail_solid_class.tres" id="11_jw5fj"]
+[ext_resource type="Resource" path="res://addons/qodot/game_definitions/fgd/solid_classes/illusionary_solid_class.tres" id="12_gqdbi"]
+[ext_resource type="Resource" path="res://addons/qodot/game_definitions/fgd/solid_classes/wall_solid_class.tres" id="13_i07j2"]
+[ext_resource type="Resource" path="res://addons/qodot/game_definitions/fgd/solid_classes/trigger_solid_class.tres" id="14_q2brv"]
+[ext_resource type="Resource" uid="uid://de6w02sa4ckl5" path="res://addons/qodot/game_definitions/fgd/solid_classes/rotate_solid_class.tres" id="15_8dcv5"]
+[ext_resource type="Resource" path="res://addons/qodot/game_definitions/fgd/solid_classes/mover_solid_class.tres" id="16_m1ftn"]
+[ext_resource type="Resource" path="res://addons/qodot/game_definitions/fgd/solid_classes/physics_solid_class.tres" id="17_exstd"]
+[ext_resource type="Resource" uid="uid://cihwhg6em7vox" path="res://addons/qodot/game_definitions/fgd/solid_classes/button_solid_class.tres" id="18_wl8qr"]
+[ext_resource type="Resource" uid="uid://bw63igpp0e4uw" path="res://Scenes/Player/player_point_class.tres" id="19_ejekp"]
+[ext_resource type="Resource" uid="uid://dxrs2fccn5sdk" path="res://Scenes/Enemies/test_enemy_point_class.tres" id="20_f4mxa"]
+[ext_resource type="Resource" uid="uid://c5pl45mnb545w" path="res://Scenes/Levels/Level Objects/kill_boundry_point_class.tres" id="21_bffjs"]
+[ext_resource type="Script" path="res://addons/qodot/src/resources/game-definitions/fgd/qodot_fgd_file.gd" id="21_ts76t"]
+
+[resource]
+script = ExtResource("21_ts76t")
+export_file = false
+target_folder = "A:\\Game dev\\TrenchBroom\\games\\Qodot"
+fgd_name = "OutOfOrder"
+base_fgd_files = Array[Resource]([])
+entity_definitions = Array[Resource]([ExtResource("1_4j24l"), ExtResource("2_6gvto"), ExtResource("3_n1yr3"), ExtResource("4_huqoi"), ExtResource("5_ws8sn"), ExtResource("6_xnsi3"), ExtResource("7_a8bna"), ExtResource("8_7ewto"), ExtResource("9_c44n6"), ExtResource("10_ipckd"), ExtResource("11_jw5fj"), ExtResource("12_gqdbi"), ExtResource("13_i07j2"), ExtResource("14_q2brv"), ExtResource("15_8dcv5"), ExtResource("16_m1ftn"), ExtResource("17_exstd"), ExtResource("18_wl8qr"), ExtResource("19_ejekp"), ExtResource("20_f4mxa"), ExtResource("21_bffjs")])

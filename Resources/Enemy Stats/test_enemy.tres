@@ -6,5 +6,5 @@
 script = ExtResource("1_7xoll")
 health = 100.0
 turn_speed = 4.0
-move_speed = 2.0
+move_speed = 5.0
 miss_chance = 10

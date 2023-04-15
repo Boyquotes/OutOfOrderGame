@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://cbkxgn4mpc3s6"
+path="res://.godot/imported/incinerator.14.map-8f6d528c8bca227c47fd050d41341ecd.tres"
+
+[deps]
+
+source_file="res://Maps/autosave/incinerator.14.map"
+dest_files=["res://.godot/imported/incinerator.14.map-8f6d528c8bca227c47fd050d41341ecd.tres"]
+
+[params]
+

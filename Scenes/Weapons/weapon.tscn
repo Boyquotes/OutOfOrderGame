@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bx7it0qy2ltjg"]
+[gd_scene load_steps=7 format=3 uid="uid://bx7it0qy2ltjg"]
 
 [ext_resource type="Script" path="res://Scripts/Weapons/weapon_base.gd" id="1_s2dcv"]
 [ext_resource type="Resource" uid="uid://btr1krsbto6lb" path="res://Resources/Weapon Stats/test_weapon.tres" id="2_1d6fv"]
@@ -6,12 +6,18 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_oub4d"]
 size = Vector3(0.1, 0.1, 0.5)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jgs5j"]
+albedo_color = Color(0.321569, 0.588235, 0.301961, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_7lkhd"]
+material = SubResource("StandardMaterial3D_jgs5j")
 size = Vector3(0.1, 0.1, 0.5)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pxc46"]
 
-[node name="Weapon" type="RigidBody3D" groups=["Weapon"]]
+[node name="Weapon" type="RigidBody3D" groups=["Magnetic", "Weapon"]]
+collision_layer = 2
+collision_mask = 2
 max_contacts_reported = 2
 contact_monitor = true
 script = ExtResource("1_s2dcv")
@@ -30,6 +36,9 @@ collision_mask = 4
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WeaponInteractArea"]
 shape = SubResource("BoxShape3D_pxc46")
 
+[node name="ProjectileSpawn" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.25)
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="AttackCooldown" type="Timer" parent="."]
@@ -40,6 +49,10 @@ one_shot = true
 [node name="CollisionDelay" type="Timer" parent="."]
 one_shot = true
 
+[node name="ReloadTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="DecayTimer" to="." method="_on_decay_timer_timeout"]
 [connection signal="timeout" from="CollisionDelay" to="." method="_on_collision_delay_timeout"]
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]

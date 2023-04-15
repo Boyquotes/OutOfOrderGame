@@ -5,11 +5,11 @@
 
 [resource]
 script = ExtResource("1_xdkge")
-damage = 10.0
+damage = 0.0
 fire_rate = 2.0
 max_ammo = 10
 auto = true
-weight = 15.0
+mass = 1.0
 thrown_damage = 10.0
 jam_chance = 0.0
 projectile = ExtResource("1_sba2x")

@@ -11,14 +11,27 @@ config_version=5
 [application]
 
 config/name="Out of Order"
-run/main_scene="res://Scenes/test_world.tscn"
-config/features=PackedStringArray("4.0", "Forward Plus")
+run/main_scene="res://Scenes/Levels/Incinerator.tscn"
+config/features=PackedStringArray("4.0", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 MouseController="*res://Scripts/Singles/mouse_controller.gd"
 KeyBindingController="*res://Scripts/Singles/key_binding_controller.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+
+[dotnet]
+
+project/assembly_name="Out of Order"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/qodot/plugin.cfg")
 
 [input]
 
@@ -77,8 +90,14 @@ Player_Slide={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194326,"key_label":0,"unicode":0,"echo":false,"script":null)
 ]
 }
+Player_Pull={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":82,"key_label":0,"unicode":114,"echo":false,"script":null)
+]
+}
 
 [layer_names]
 
-3d_physics/layer_2="HeldWeapons"
+3d_render/layer_2="Weapons"
+3d_physics/layer_2="Weapons"
 3d_physics/layer_3="WeaponInteration"

@@ -8,6 +8,8 @@ func process(delta):
 	elif is_dash_pressed():
 		return PlayerBaseState.State.Dashing
 	check_attack()
+	check_pull()
+	recover_energy(delta)
 	return PlayerBaseState.State.None
 
 func movement_input() -> Vector3:
@@ -18,7 +20,7 @@ func is_slide_pressed() -> bool:
 	return Input.is_action_pressed("Player_Slide") and body.is_on_floor()
 
 func is_dash_pressed() -> bool:
-	return Input.is_action_pressed("Player_Dash")
+	return Input.is_action_just_pressed("Player_Dash") and body.get_energy()>=body.get_dash_cost()
 
 #Checks if the player is attacking
 func check_attack():
@@ -26,6 +28,13 @@ func check_attack():
 		body.attack()
 	elif Input.is_action_pressed("Player_Attack"):
 		body.auto_attack()
+
+func check_pull():
+	if Input.is_action_just_pressed("Player_Pull"):
+		body.pull_weapons()
+
+func recover_energy(delta):
+	body.set_energy(clamp(body.get_energy()+delta/4,0,body.get_max_energy()))
 
 func physics_process(delta) -> void:
 	movement(delta)
@@ -56,19 +65,13 @@ func update_air_velocity(vel:Vector3,wish_dir:Vector3,delta:float) -> Vector3:
 
 #Takes a velocity and aplies a friction force
 func apply_friction(vel: Vector3, delta: float) -> Vector3:
-	var new_speed: float = 0
 	var speed: float = vel.length()
-	var friction: float = body.get_friction()
 	var drop: float = 0
-	
 	if speed < 0.01:
 		return vel*Vector3(0,1,0)
-	
 	if body.is_on_floor():
-		drop += speed*friction*delta
-	
-	new_speed = clamp(speed - drop,0,INF)/speed
-	return vel*new_speed
+		drop += speed*body.get_friction()*delta
+	return vel*clamp(speed - drop,0,INF)/speed
 
 func input(event) -> void:
 	move_camera(event as InputEventMouseMotion)
@@ -78,10 +81,8 @@ func input(event) -> void:
 func move_camera(mouse_movement:InputEventMouseMotion) -> void:
 	if !mouse_movement:
 		return
-	
 	if !MouseController.is_mouse_locked():
 		return
-	
 	var cam_rotation = body.get_camera().get_rotation()
 	cam_rotation.y -= mouse_movement.relative.x * MouseController.get_sensitivity()
 	cam_rotation.x -= mouse_movement.relative.y * MouseController.get_sensitivity()
