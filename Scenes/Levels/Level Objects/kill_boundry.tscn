@@ -6,6 +6,7 @@
 size = Vector3(14, 1, 35)
 
 [node name="KillBoundry" type="Area3D"]
+collision_mask = 4294967295
 script = ExtResource("1_7o0sc")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=3 uid="uid://cwvu86a2cv2vt"]
+
+[ext_resource type="Script" path="res://Scripts/Level Objects/vending_machine.gd" id="1_0p2np"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_skfmt"]
+size = Vector3(1.5, 3, 0.75)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thv65"]
+albedo_color = Color(0.721569, 0.415686, 0.207843, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vitlm"]
+material = SubResource("StandardMaterial3D_thv65")
+size = Vector3(1.5, 3, 0.75)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a3vjd"]
+size = Vector3(0.75, 0.3, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ytncf"]
+size = Vector3(0.75, 0.3, 0.15)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_5awcg"]
+height = 4.0
+radius = 1.5
+
+[node name="StaticBody3D" type="StaticBody3D"]
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("1_0p2np")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_skfmt")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_vitlm")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="VendingSlot" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.258819, 0.965926, 0, -0.965926, 0.258819, 0, 0.814065, -0.525199)
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VendingSlot"]
+shape = SubResource("BoxShape3D_a3vjd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VendingSlot"]
+mesh = SubResource("BoxMesh_ytncf")
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("CylinderShape3D_5awcg")
+
+[node name="SpawnCooldown" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
+[connection signal="timeout" from="SpawnCooldown" to="." method="_on_spawn_cooldown_timeout"]
