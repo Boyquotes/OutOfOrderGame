@@ -10,5 +10,6 @@ func update_properties():
 func _on_body_entered(body):
 	if body.is_in_group("Player") or body.is_in_group("Enemy"):
 		body.set_health(0)
-	elif body is Weapon:
+	elif body.is_in_group("Collectable") or body.is_in_group("Weapon"):
 		body.call_deferred("queue_free")
+	
