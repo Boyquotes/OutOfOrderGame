@@ -1,8 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://hd6arivb2cgh"]
+[gd_scene load_steps=9 format=3 uid="uid://hd6arivb2cgh"]
 
-[ext_resource type="PackedScene" uid="uid://n2srf2j7f04k" path="res://Scenes/Player/player.tscn" id="2_b5gmg"]
+[ext_resource type="PackedScene" uid="uid://n2srf2j7f04k" path="res://Scenes/Player/player.tscn" id="2_afwed"]
 [ext_resource type="PackedScene" uid="uid://bx7it0qy2ltjg" path="res://Scenes/Weapons/weapon.tscn" id="3_30ke4"]
-[ext_resource type="PackedScene" uid="uid://cqx8jhdsb2xr" path="res://Scenes/Enemies/test_enemy.tscn" id="4_18xn4"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_eue5k"]
 vertices = PackedVector3Array(-43.5, -0.5, -49.5, -49.5, -0.5, -49.5, -49.5, -0.5, -43.5, -49.5, -0.5, 43.25, -49.5, -0.5, 49.5, -43.5, -0.5, 49.5, 49.5, -0.5, -43.5, 49.5, -0.5, -49.5, 43.25, -0.5, -49.5, 43.25, -0.5, 49.5, 49.5, -0.5, 49.5, 49.5, -0.5, 43.25, -37.25, -0.5, -49.5, -43.5, -0.5, -49.5, -49.5, -0.5, -43.5, -49.5, -0.5, -37.25, -49.5, -0.5, 43.25, -43.5, -0.5, 49.5, -37.25, -0.5, 49.5, -49.5, -0.5, 37, 49.5, -0.5, -37.25, 49.5, -0.5, -43.5, 43.25, -0.5, -49.5, 37, -0.5, -49.5, 37, -0.5, 49.5, 43.25, -0.5, 49.5, 49.5, -0.5, 43.25, -49.5, -0.5, 0, -49.5, -0.5, 6, -6.25, -0.5, 49.5, 18.5, -0.5, 49.5, 49.5, -0.5, 24.75, 49.5, -0.5, 18.5, 12.25, -0.5, 49.5, 49.5, -0.5, -6.25, 49.5, -0.5, -12.5, 12.25, -0.5, -49.5, 6, -0.5, -49.5, 37, -0.5, 49.5, 49.5, -0.5, 43.25, 49.5, -0.5, 37, 30.75, -0.5, 49.5, -31, -0.5, -49.5, -37.25, -0.5, -49.5, -49.5, -0.5, -37.25, -49.5, -0.5, -31, -49.5, -0.5, 37, -37.25, -0.5, 49.5, -31, -0.5, 49.5, -49.5, -0.5, 30.75, 49.5, -0.5, -31, 49.5, -0.5, -37.25, 37, -0.5, -49.5, 30.75, -0.5, -49.5, -12.5, -0.5, -49.5, -18.75, -0.5, -49.5, -49.5, -0.5, -18.75, -49.5, -0.5, -12.5, -49.5, -0.5, 18.5, -18.75, -0.5, 49.5, -12.5, -0.5, 49.5, -49.5, -0.5, 12.25, 49.5, -0.5, -6.25, 6, -0.5, -49.5, 0, -0.5, -49.5, 49.5, -0.5, 0, 49.5, -0.5, -12.5, 49.5, -0.5, -18.75, 18.5, -0.5, -49.5, 12.25, -0.5, -49.5, 30.75, -0.5, 49.5, 49.5, -0.5, 37, 49.5, -0.5, 30.75, 24.75, -0.5, 49.5, -49.5, -0.5, 24.75, -49.5, -0.5, 30.75, -31, -0.5, 49.5, -24.75, -0.5, 49.5, 49.5, -0.5, -31, 30.75, -0.5, -49.5, 24.75, -0.5, -49.5, 49.5, -0.5, -24.75, -24.75, -0.5, -49.5, -31, -0.5, -49.5, -49.5, -0.5, -31, -49.5, -0.5, -24.75, 49.5, -0.5, 0, 0, -0.5, -49.5, -49.5, -0.5, 0, -6.25, -0.5, 49.5, 0, -0.5, 49.5, 49.5, -0.5, 6, 12.25, -0.5, 49.5, 49.5, -0.5, 18.5, 49.5, -0.5, 12.25, 6, -0.5, 49.5, 24.75, -0.5, 49.5, 49.5, -0.5, 30.75, 49.5, -0.5, 24.75, 18.5, -0.5, 49.5, 0, -0.5, -49.5, -6.25, -0.5, -49.5, -49.5, -0.5, -6.25, -49.5, -0.5, 0, 6, -0.5, 49.5, 49.5, -0.5, 12.25, 49.5, -0.5, 6, 0, -0.5, 49.5, -49.5, -0.5, 24.75, -24.75, -0.5, 49.5, -18.75, -0.5, 49.5, -49.5, -0.5, 18.5, 49.5, -0.5, -18.75, 49.5, -0.5, -24.75, 24.75, -0.5, -49.5, 18.5, -0.5, -49.5, -18.75, -0.5, -49.5, -24.75, -0.5, -49.5, -49.5, -0.5, -24.75, -49.5, -0.5, -18.75, -6.25, -0.5, -49.5, -12.5, -0.5, -49.5, -49.5, -0.5, -12.5, -49.5, -0.5, -6.25, -49.5, -0.5, 12.25, -12.5, -0.5, 49.5, -6.25, -0.5, 49.5, -49.5, -0.5, 6)
@@ -24,16 +23,11 @@ size = Vector2(100, 100)
 
 [node name="QodotMap" type="Node3D"]
 
-[node name="Player" parent="." instance=ExtResource("2_b5gmg")]
-
 [node name="Weapon" parent="." instance=ExtResource("3_30ke4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.53103)
 
 [node name="Weapon2" parent="." instance=ExtResource("3_30ke4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.93733, 0, 0)
-
-[node name="TestEnemy" parent="." instance=ExtResource("4_18xn4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0214, 0, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-3.78552e-08, 0.5, -0.866025, 2.18557e-08, 0.866025, 0.5, 1, 0, -4.37114e-08, 0, 0, 0)
@@ -45,8 +39,8 @@ navigation_mesh = SubResource("NavigationMesh_eue5k")
 
 [node name="Floor" type="StaticBody3D" parent="NavigationRegion3D" groups=["StopsBullets"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-collision_layer = 3
-collision_mask = 3
+collision_layer = 16777215
+collision_mask = 16777215
 physics_material_override = SubResource("PhysicsMaterial_5lkon")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Floor"]
@@ -54,3 +48,5 @@ shape = SubResource("WorldBoundaryShape3D_o3uvy")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Floor"]
 mesh = SubResource("PlaneMesh_gxwtu")
+
+[node name="Player" parent="." instance=ExtResource("2_afwed")]
