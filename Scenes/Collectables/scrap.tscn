@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://dggxxx7gyqww8"]
+
+[ext_resource type="Script" path="res://Scripts/Collectables/scrap.gd" id="1_nm45j"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t3blb"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_qrykk"]
+top_radius = 0.25
+bottom_radius = 0.25
+height = 0.125
+
+[node name="Scrap" type="CharacterBody3D" groups=["Collectable", "Magnetic"]]
+collision_layer = 8
+script = ExtResource("1_nm45j")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_t3blb")
+
+[node name="Visuals" type="Node3D" parent="CollisionShape3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D/Visuals"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0.0369513, 0, 0)
+mesh = SubResource("CylinderMesh_qrykk")
+skeleton = NodePath("../../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="CollisionShape3D/Visuals"]
+transform = Transform3D(0.707107, -0.5, -0.5, 0.683013, 0.665976, 0.29995, 0.183013, -0.553603, 0.812422, -0.124904, 0, 0)
+mesh = SubResource("CylinderMesh_qrykk")
+skeleton = NodePath("../../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="CollisionShape3D/Visuals"]
+transform = Transform3D(-0.5, -0.853554, 0.146447, 0.5, -0.146447, 0.853553, -0.707107, 0.5, 0.5, 0.0561183, 0.128923, 0)
+mesh = SubResource("CylinderMesh_qrykk")
+skeleton = NodePath("../../..")
