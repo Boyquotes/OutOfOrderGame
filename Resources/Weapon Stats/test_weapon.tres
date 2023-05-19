@@ -5,9 +5,10 @@
 
 [resource]
 script = ExtResource("1_xdkge")
-damage = 0.0
+damage = 5.0
 fire_rate = 2.0
 max_ammo = 10
+reload_time = 1.0
 auto = true
 mass = 1.0
 thrown_damage = 10.0
