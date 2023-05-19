@@ -3,16 +3,17 @@ extends PlayerBaseState
 @onready var dash_timer = $DashTimer
 
 func enter():
-	dash_timer.start(.25)
-	body.set_energy(body.get_energy()-body.get_dash_cost())
-	dash()
+	if body.get_energy()>=body.get_dash_cost():
+		dash_timer.start(.25)
+		body.set_energy(body.get_energy()-body.get_dash_cost())
+		dash()
 
 func dash():
 	var dir = body.get_velocity().normalized()
 	if movement_input() == Vector3.ZERO:
 		body.set_velocity(body.get_transform().basis * Vector3(0, 0, -body.get_dash_speed()))
 	else:
-		body.set_velocity(movement_input() * Vector3(body.get_dash_speed(), 0, body.get_dash_speed()))
+		body.set_velocity(movement_input() * Vector3(body.get_max_ground_speed()*5, 0, body.get_max_ground_speed()*5))
 
 func movement_input() -> Vector3:
 	var input = Input.get_vector("Player_Left", "Player_Right", "Player_Forward", "Player_Back")
