@@ -5,15 +5,14 @@ extends PlayerBaseState
 
 #Switches to states from idle
 func process(delta) -> PlayerBaseState.State:
-	if is_dash_pressed():
-		return PlayerBaseState.State.Dashing
-	elif is_slide_pressed():
+	if is_slide_pressed():
 		return PlayerBaseState.State.Sliding
+	elif is_dash_pressed():
+		return PlayerBaseState.State.Dashing
 	elif is_direction_pressed():
 		return PlayerBaseState.State.Walking
-
 	check_attack()
-	check_pull()
+	check_pull(delta)
 	recover_energy(delta)
 	return PlayerBaseState.State.None
 
@@ -21,12 +20,12 @@ func process(delta) -> PlayerBaseState.State:
 func is_direction_pressed() -> bool:
 	return Input.get_vector("Player_Left", "Player_Right", "Player_Forward", "Player_Back") != Vector2.ZERO
 
+func is_dash_pressed() -> bool:
+	return Input.is_action_just_pressed("Player_Dash")
+
 #Checks if the player tries to slide and is on the floor
 func is_slide_pressed() -> bool:
 	return Input.is_action_pressed("Player_Slide") and body.is_on_floor()
-
-func is_dash_pressed() -> bool:
-	return Input.is_action_just_pressed("Player_Dash") and body.get_energy()>=body.get_dash_cost()
 
 #Checks if the player is attacking
 func check_attack():
@@ -35,9 +34,9 @@ func check_attack():
 	elif Input.is_action_pressed("Player_Attack"):
 		body.auto_attack()
 
-func check_pull():
-	if Input.is_action_just_pressed("Player_Pull"):
-		body.pull_weapons()
+func check_pull(delta):
+	if Input.is_action_pressed("Player_Pull") and body.get_energy()>=body.get_magnet_cost()*delta:
+		body.pull_magnet(delta)
 
 func recover_energy(delta):
 	body.set_energy(clamp(body.get_energy()+delta,0,body.get_max_energy()))
