@@ -10,9 +10,9 @@ config_version=5
 
 [application]
 
-config/name="Out of Order"
-run/main_scene="res://Scenes/Levels/Incinerator.tscn"
-config/features=PackedStringArray("4.0", "C#", "Forward Plus")
+config/name="Lead&Lodestone"
+run/main_scene="res://Scenes/test_world.tscn"
+config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -101,3 +101,4 @@ Player_Pull={
 3d_render/layer_2="Weapons"
 3d_physics/layer_2="Weapons"
 3d_physics/layer_3="WeaponInteration"
+3d_physics/layer_4="Collectables"

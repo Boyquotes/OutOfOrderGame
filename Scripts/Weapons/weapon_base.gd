@@ -23,7 +23,7 @@ const PROJ_SPEED: float = 75
 @onready var ammo: int = stats.get_max_ammo() 
 
 var jammed: bool = false
-var collided_bodies: Array
+var scrap_preload: PackedScene = preload("res://Scenes/Collectables/scrap.tscn")
 
 #Setters
 
@@ -36,7 +36,7 @@ func set_ammo(value:int) -> void:
 func set_jammed(value:bool) -> void:
 	jammed = value
 
-func set_held(value:bool) -> void:
+func set_equiped(value:bool) -> void:
 	if value:
 		set_collectable(false)
 		set_collision_layer(0)
@@ -105,11 +105,14 @@ func reload() -> void:
 		return
 	reload_timer.start(stats.get_reload_time())
 
+func pull(pos:Vector3,strength:float):
+	set_linear_velocity(get_position().direction_to(pos).normalized()*strength*sqrt(position.distance_to(pos)))
+
+func push(pos:Vector3,strength:float):
+	set_linear_velocity(pos.direction_to(get_position()).normalized()*strength*pow(position.distance_to(pos),2))
 
 #Handles thowing held weapons and triggering a despawn if they can't be collected
 func throw(throw_force:Vector3) -> void:
-	set_model_layer(1)
-	set_freeze_enabled(false)
 	collision_delay.start(.05)
 	apply_central_impulse(throw_force)
 	if !is_collectable():
@@ -126,21 +129,17 @@ func _on_body_entered(body) -> void:
 
 #Handles doing damage with thrown weapons
 func throw_collision(body):
-	if get_linear_velocity().length() < 2:
-		return
-	
-	if collided_bodies.has(body):
-		return
-	
-	if body.is_in_group("Enemy"):
+	if body.is_in_group("Enemy") and get_linear_velocity().length() < 2:
 		body.take_damage(get_mass()*get_linear_velocity().length() + stats.get_thrown_damage())
-		collided_bodies.append(body)
-	elif body.is_in_group("Player"):
-		body.take_damage((get_mass()*get_linear_velocity().length() + stats.get_thrown_damage())/4)
-		collided_bodies.append(body)
+	
+	if !is_collectable():
+		var scrap = scrap_preload.instantiate()
+		find_parent("QodotMap").add_child(scrap)
+		scrap.set_position(get_global_position())
+		call_deferred("queue_free")
 
 func _on_collision_delay_timeout():
-	set_held(false)
+	set_equiped(false)
 
 func _on_reload_timer_timeout():
 	set_ammo(get_stats().get_max_ammo())
