@@ -3,12 +3,12 @@ extends PlayerBaseState
 func process(delta):
 	if movement_input() == Vector3.ZERO:
 		return PlayerBaseState.State.Idle
-	elif is_slide_pressed():
-		return PlayerBaseState.State.Sliding
 	elif is_dash_pressed():
 		return PlayerBaseState.State.Dashing
+	elif is_slide_pressed():
+		return PlayerBaseState.State.Sliding
 	check_attack()
-	check_pull()
+	check_pull(delta)
 	recover_energy(delta)
 	return PlayerBaseState.State.None
 
@@ -16,11 +16,11 @@ func movement_input() -> Vector3:
 	var input_dir = Input.get_vector("Player_Left", "Player_Right", "Player_Forward", "Player_Back")
 	return (body.get_transform().basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 
+func is_dash_pressed() -> bool:
+	return Input.is_action_just_pressed("Player_Dash")
+
 func is_slide_pressed() -> bool:
 	return Input.is_action_pressed("Player_Slide") and body.is_on_floor()
-
-func is_dash_pressed() -> bool:
-	return Input.is_action_just_pressed("Player_Dash") and body.get_energy()>=body.get_dash_cost()
 
 #Checks if the player is attacking
 func check_attack():
@@ -29,9 +29,9 @@ func check_attack():
 	elif Input.is_action_pressed("Player_Attack"):
 		body.auto_attack()
 
-func check_pull():
-	if Input.is_action_just_pressed("Player_Pull"):
-		body.pull_weapons()
+func check_pull(delta):
+	if Input.is_action_pressed("Player_Pull") and body.get_energy()>=body.get_magnet_cost():
+		body.pull_magnet(delta)
 
 func recover_energy(delta):
 	body.set_energy(clamp(body.get_energy()+delta/4,0,body.get_max_energy()))
