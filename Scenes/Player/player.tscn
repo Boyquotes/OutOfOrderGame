@@ -8,17 +8,15 @@
 [ext_resource type="Script" path="res://Scripts/Player/State Machine/player_walking_state.gd" id="3_xj4hf"]
 [ext_resource type="Environment" uid="uid://d3hqrfj2mfpn1" path="res://Environment.tres" id="4_u3ckk"]
 [ext_resource type="Shader" path="res://Shaders/player_pixel.gdshader" id="5_qchy3"]
+[ext_resource type="PackedScene" uid="uid://dfvj8m3ovs3jq" path="res://Scenes/Player/weapon_magnet_system.tscn" id="5_vna5x"]
 [ext_resource type="Script" path="res://Scripts/Player/State Machine/player_slide_state.gd" id="7_eg50b"]
-[ext_resource type="Script" path="res://Scripts/Player/State Machine/player_dashing_state.gd" id="7_wdvwh"]
+[ext_resource type="Script" path="res://Scripts/Player/State Machine/player_dashing_state.gd" id="8_ahpek"]
 [ext_resource type="Script" path="res://Scripts/Player/State Machine/player_dead_state.gd" id="8_lx5qj"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_c2fjn"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_0wudu"]
-size = Vector3(5, 3, 10)
-
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_udjt5"]
-radius = 1.5
+radius = 2.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gougv"]
 shader = ExtResource("5_qchy3")
@@ -51,6 +49,8 @@ debug_shape_custom_color = Color(0.686275, 0, 0, 1)
 [node name="AimRay" type="RayCast3D" parent="Camera3D"]
 target_position = Vector3(0, 0, -1000)
 
+[node name="WeaponMagnetSystem" parent="Camera3D" instance=ExtResource("5_vna5x")]
+
 [node name="SubViewportContainer" type="SubViewportContainer" parent="Camera3D"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -74,16 +74,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.25, -0.5)
 
 [node name="PlayerWeapon" parent="Camera3D/SubViewportContainer/SubViewport/WeaponCam/Hand" instance=ExtResource("2_kfgxt")]
 
-[node name="MagnetArea" type="Area3D" parent="Camera3D"]
-collision_mask = 3
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Camera3D/MagnetArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
-shape = SubResource("BoxShape3D_0wudu")
-
 [node name="AutoPickup" type="Area3D" parent="Camera3D"]
-collision_layer = 4
-collision_mask = 4
+collision_layer = 12
+collision_mask = 12
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Camera3D/AutoPickup"]
 shape = SubResource("CylinderShape3D_udjt5")
@@ -99,14 +92,14 @@ script = ExtResource("3_hriee")
 [node name="Walking" type="Node" parent="StateController"]
 script = ExtResource("3_xj4hf")
 
-[node name="Sliding" type="Node" parent="StateController"]
-script = ExtResource("7_eg50b")
-
 [node name="Dashing" type="Node" parent="StateController"]
-script = ExtResource("7_wdvwh")
+script = ExtResource("8_ahpek")
 
 [node name="DashTimer" type="Timer" parent="StateController/Dashing"]
 one_shot = true
+
+[node name="Sliding" type="Node" parent="StateController"]
+script = ExtResource("7_eg50b")
 
 [node name="Dead" type="Node" parent="StateController"]
 script = ExtResource("8_lx5qj")
@@ -139,6 +132,5 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 4
 
-[connection signal="body_entered" from="Camera3D/MagnetArea" to="." method="_on_magnet_area_body_entered"]
-[connection signal="body_exited" from="Camera3D/MagnetArea" to="." method="_on_magnet_area_body_exited"]
 [connection signal="area_entered" from="Camera3D/AutoPickup" to="." method="_on_auto_pickup_area_entered"]
+[connection signal="body_entered" from="Camera3D/AutoPickup" to="." method="_on_auto_pickup_body_entered"]

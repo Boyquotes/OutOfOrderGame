@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://dfvj8m3ovs3jq"]
+
+[ext_resource type="Script" path="res://Scripts/Player/weapon_magnet_system.gd" id="1_6d0ka"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_f0cyu"]
+radius = 10.0
+
+[node name="WeaponMagnetSystem" type="RayCast3D"]
+target_position = Vector3(0, 0, -30)
+debug_shape_custom_color = Color(0.639216, 0.305882, 0, 1)
+script = ExtResource("1_6d0ka")
+
+[node name="MagnetArea" type="Area3D" parent="."]
+collision_mask = 11
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MagnetArea"]
+shape = SubResource("SphereShape3D_f0cyu")
+
+[node name="Default" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
